@@ -742,7 +742,8 @@ def decode_OID(data, header):
     flags = header["flags"]
     # Need to split off the header to get the subid count
     header, data = slicedata(data, 4)
-    n_subid, prefix, include = struct.unpack("BBBx", ntp.poly.polybytes(header))
+    n_subid, prefix, include = struct.unpack(
+        "BBBx", ntp.poly.polybytes(header))
     if prefix != 0:
         subids = internetPrefix + (prefix,)
     else:

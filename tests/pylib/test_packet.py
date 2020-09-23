@@ -225,7 +225,7 @@ class TestPacket(unittest.TestCase):
         # Run test
         buf = f(span, 370)
         expected = ", addr.0=3.4.5.6:23, last.0=2019-12-31T04:45:00Z, " \
-                              "addr.1=2.0.0.1:23, last.1=2019-12-31T03:30:00Z"
+            "addr.1=2.0.0.1:23, last.1=2019-12-31T03:30:00Z"
         self.assertEqual(buf, expected)
 
 
@@ -1119,7 +1119,8 @@ class TestControlSession(unittest.TestCase):
             cls.passwd = "qwerty"
             result = cls.sendrequest(1, 2, ntp.poly.polybytes("foo"), True)
             self.assertEqual(result.sequence, 2)
-            self.assertEqual(result.extension, ntp.poly.polybytes("foo\x00mac"))
+            self.assertEqual(result.extension,
+                             ntp.poly.polybytes("foo\x00mac"))
             # Test with auth keyid / password failure
             cls.keyid = None
             try:
@@ -1573,7 +1574,8 @@ class TestControlSession(unittest.TestCase):
         # Init
         cls = self.target()
         cls.doquery = doquery_jig
-        cls.response = ntp.poly.polybytes("Config Succeeded    \n \x00 blah blah")
+        cls.response = ntp.poly.polybytes(
+            "Config Succeeded    \n \x00 blah blah")
         # Test success
         result = cls.config(ntp.poly.polybytes("Boo!"))
         self.assertEqual(result, True)
@@ -1634,10 +1636,11 @@ class TestControlSession(unittest.TestCase):
         # data: nonce, last.older, addr.older, now, last.newest
         #       addr, last, first, ct, mv, rs
         vars = odict((("nonce", "noncevalue"), ("last.older", "FAIL0"),
-                ("addr.older", "FAIL1"), ("now", "0xcfba1ce0.80000000"),
-                ("last.newest", "FAIL2"), ("addr.1", "addrtest"),
-                ("last.2", "lasttest"), ("first.3", "firsttest"), ("ct.4", "cttest"),
-                ("mv.5", "mvtest"), ("rs.6", "rstest")))
+                      ("addr.older", "FAIL1"), ("now", "0xcfba1ce0.80000000"),
+                      ("last.newest", "FAIL2"), ("addr.1", "addrtest"),
+                      ("last.2", "lasttest"), ("first.3",
+                                               "firsttest"), ("ct.4", "cttest"),
+                      ("mv.5", "mvtest"), ("rs.6", "rstest")))
         cls = self.target()
         span = ntpp.MRUList()
         nonce = cls._ControlSession__mru_analyze(vars, span, None)
@@ -1655,7 +1658,7 @@ class TestControlSession(unittest.TestCase):
         m5.mv = "mvtest"
         m6 = ntpp.MRUEntry()
         m6.rs = "rstest"
-        expected = [m1, m2, m3, m4, m5, m6] # sort order
+        expected = [m1, m2, m3, m4, m5, m6]  # sort order
         self.assertEqual(len(span.entries), len(expected))
         for i in range(len(span.entries)):
             self.assertEqual(span.entries[i].addr, expected[i].addr)

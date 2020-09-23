@@ -743,7 +743,7 @@ class PeerStatusWord:
                 ntp.control.CTL_PST_SEL_EXCESS: "backup",
                 ntp.control.CTL_PST_SEL_SYSPEER: "sys.peer",
                 ntp.control.CTL_PST_SEL_PPS: "pps.peer",
-                }
+            }
             self.condition = seldict[statval & 0x7]
         else:
             if (statval & 0x3) == OLD_CTL_PST_SEL_REJECT:
@@ -772,7 +772,7 @@ class PeerStatusWord:
             ntp.magic.PEVNT_ARMED: "leap_armed",
             ntp.magic.PEVNT_NEWPEER: "sys_peer",
             ntp.magic.PEVNT_CLOCK: "clock_alarm",
-            }
+        }
         self.last_event = event_dict.get(ntp.magic.PEER_EVENT | self.event, "")
 
     def __str__(self):
@@ -1301,14 +1301,14 @@ class MRUSummary:
             if entry.sc:
                 score = float(entry.sc)
                 if score > 100000.0:
-                  score = "%8.1f" % score
+                    score = "%8.1f" % score
                 elif score > 10000.0:
-                  score = "%8.2f" % score
+                    score = "%8.2f" % score
                 else:
-                  score = "%8.3f" % score
+                    score = "%8.3f" % score
             else:
                 score = "-"
-            if entry.dr!= None:     # 0 is valid
+            if entry.dr != None:     # 0 is valid
                 drop = "%4d" % entry.dr
             else:
                 drop = "-"

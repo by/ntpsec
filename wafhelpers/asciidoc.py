@@ -59,11 +59,13 @@ def configure(ctx):
                     version_tuple = tuple(map(int, match.groups()))
                     if version_tuple >= asciidocminver:
                         if progname == 'asciidoc':
-                            ctx.find_program('a2x', var='BIN_A2X', mandatory=False)
+                            ctx.find_program(
+                                'a2x', var='BIN_A2X', mandatory=False)
                             ctx.find_program('xsltproc', var='BIN_XSLTPROC',
                                              mandatory=False)
                         elif progname == 'asciidoc3':
-                            ctx.find_program('a2x3', var='BIN_A2X', mandatory=False)
+                            ctx.find_program(
+                                'a2x3', var='BIN_A2X', mandatory=False)
                             ctx.find_program('xsltproc', var='BIN_XSLTPROC',
                                              mandatory=False)
 
@@ -100,27 +102,27 @@ def configure(ctx):
             #   +monospace+ needs to be changed to `monospace`
             # https://asciidoctor.org/docs/migration/#migration-cheatsheet
             '-a', 'compat-mode',
-            ]
+        ]
         ctx.env.ARGS_MAN = ctx.env.ARGS_DOC + [
             '-b', 'manpage',
-            ]
+        ]
         ctx.env.ARGS_DOC += [
             '-b', 'xhtml5', '-a', 'linkcss',
             '-a', 'stylesheet=asciidoc.css',
-            ]
+        ]
     elif 'asciidoc' in ctx.env.BIN_ASCIIDOC[0]:
         ctx.env.ARGS_DOC = [
             ctx.env.BIN_ASCIIDOC[0],
             '-a', 'attribute-missing=warn',
             '-b', 'html5', '-a', 'linkcss',
             '-a', 'stylesheet=asciidoc.css',
-            ]
+        ]
         if ctx.env.BIN_A2X and ctx.env.BIN_XSLTPROC:
             ctx.env.ARGS_MAN = [
                 ctx.env.BIN_A2X[0],
                 '-a', 'attribute-missing=warn',
                 '-f', 'manpage', '--no-xmllint',
-                ]
+            ]
         else:
             if ctx.options.enable_manpage:
                 ctx.fatal('a2x/xsltproc not found, remove --enable-manpage')

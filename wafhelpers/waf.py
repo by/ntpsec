@@ -26,7 +26,8 @@ def manpage_subst_fun(self, code):
     except AttributeError:
         d = {}
         for x in lst:
-            tmp = getattr(self.generator, x, '') or self.env[x] or self.env[x.upper()]
+            tmp = getattr(self.generator, x,
+                          '') or self.env[x] or self.env[x.upper()]
             try:
                 tmp = ''.join(tmp)
             except TypeError:

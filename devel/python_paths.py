@@ -33,7 +33,7 @@ PYTHON_COMMAND_MAP = [
     ['sys-prefix', 'print(sys.prefix)'],
     ['std-prefix', 'print(sysconfig.PREFIX)'],
     ['exec-prefix', 'print(sysconfig.EXEC_PREFIX)'],
-    ]
+]
 
 PYTHON_COMMANDS = [xx[1] for xx in PYTHON_COMMAND_MAP]
 PYTHON_VALUE_NAMES = [xx[0] for xx in PYTHON_COMMAND_MAP if xx[0]]
@@ -105,14 +105,15 @@ def main(argv=None):  # pylint: disable=too-many-locals
         sys.stdout.write('\n'.join(result))
         return 0
     python_list = ExeFilter(FileList(MakePatterns(GetPaths(),
-                            PYTHON_PATTERNS)))
+                                                  PYTHON_PATTERNS)))
     done = set()
     unique = total = 0
     for python in python_list:
         try:
             values = PythonCommands([python], '\n'.join(PYTHON_COMMANDS))
         except (OSError, BadReturn):  # Avoid 'as' for <2.6 compatibility
-            exmsg = traceback.format_exception_only(*sys.exc_info()[:2])[-1].strip()
+            exmsg = traceback.format_exception_only(
+                *sys.exc_info()[:2])[-1].strip()
             _print('Skipping %s due to %s' % (python, exmsg))
             continue
         if len(values) != len(PYTHON_VALUE_NAMES):

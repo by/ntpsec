@@ -1,5 +1,6 @@
 """Run a suite of tests on the listed binaries."""
 from __future__ import print_function
+import ntp.util
 import os
 import os.path
 import sys
@@ -7,7 +8,6 @@ import waflib.Context
 import waflib.Logs
 import waflib.Utils
 sys.path.insert(0, "%s/main/tests/pylib" % waflib.Context.out_dir)
-import ntp.util
 
 verStr = ntp.util.stdversion()
 
@@ -62,11 +62,11 @@ def run(cmd, reg, pythonic):
     if pythonic:
         cmd = [sys.executable] + list(cmd)
     p = waflib.Utils.subprocess.Popen(cmd, env={'PYTHONPATH': '%s/main/tests/pylib' %
-                                                 waflib.Context.out_dir},
-                         universal_newlines=True,
-                         stdin=waflib.Utils.subprocess.PIPE,
-                         stdout=waflib.Utils.subprocess.PIPE,
-                         stderr=waflib.Utils.subprocess.PIPE, cwd=waflib.Context.out_dir)
+                                                waflib.Context.out_dir},
+                                      universal_newlines=True,
+                                      stdin=waflib.Utils.subprocess.PIPE,
+                                      stdout=waflib.Utils.subprocess.PIPE,
+                                      stderr=waflib.Utils.subprocess.PIPE, cwd=waflib.Context.out_dir)
 
     stdout, stderr = p.communicate()
 

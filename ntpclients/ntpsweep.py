@@ -118,7 +118,7 @@ def scan_host(host, level):
             printhost = printhost.replace(strip, "")
         # append number of peers in brackets if requested and valid
         if (recurse and (known_host_info[host] != " ?") and
-           (host in known_host_peers)):
+                (host in known_host_peers)):
             printhost += " (%d)" % len(known_host_peers[host])
         # Finally print complete host line
         print("%-32s %s" % (printhost[:32], known_host_info[host]))

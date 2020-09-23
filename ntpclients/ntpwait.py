@@ -18,14 +18,14 @@ A spurious 'not running' message can result from queries being disabled.
 # SPDX-License-Identifier: BSD-2-Clause
 
 # Because we've actually seen this fail on a ^C during import of ntp.packet.
+import socket
+import time
+import re
+import getopt
 import signal
 import sys
 signal.signal(signal.SIGINT, lambda signal, frame: sys.exit(2))
 
-import getopt
-import re
-import time
-import socket
 
 try:
     import ntp.magic

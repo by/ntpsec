@@ -316,7 +316,7 @@ class TestPacketControl(unittest.TestCase):
             self.receivedPackets.append(pkts.pop(0))
 
         p = AX.PacketControl(None, None)
-        p.packetEater = (lambda : packetEater_jig(p))
+        p.packetEater = (lambda: packetEater_jig(p))
         p.spinGap = 0
         # Test with session id match required
         ret = p.waitForResponse(opkt)
@@ -360,7 +360,7 @@ class TestPacketControl(unittest.TestCase):
             self.receivedData += pollReturns.pop(0)
         p = AX.PacketControl(None, None)
         p.sessionID = 42
-        p.pollSocket = (lambda : pollSocket_jig(p))
+        p.pollSocket = (lambda: pollSocket_jig(p))
         # Test incomplete header
         p.packetEater()
         self.assertEqual(p.receivedPackets, [])
@@ -633,7 +633,7 @@ class TestPacketControl(unittest.TestCase):
         handlerCalls = []
         handlerReturns = [AP.ERR_NOERROR, AP.ERR_NOERROR]
         handler = (lambda a, vb: (handlerCalls.append((a, vb)),
-                   handlerReturns.pop(0))[1])
+                                  handlerReturns.pop(0))[1])
         mjig = AX.MIBControl()
         mjig.setVarbinds = ["foo", "bar"]
         mjig.setHandlers = [handler, handler]

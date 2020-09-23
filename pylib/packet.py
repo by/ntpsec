@@ -716,7 +716,7 @@ class ControlSession:
         ntp.control.CERR_UNKNOWNVAR: "UNKNOWNVAR",
         ntp.control.CERR_BADVALUE: "BADVALUE",
         ntp.control.CERR_RESTRICT: "RESTRICT",
-        }
+    }
 
     def __init__(self):
         self.debug = 0
@@ -1041,7 +1041,7 @@ class ControlSession:
                                      (len(rawdata), (_pend + KEYID_LENGTH + MINIMUM_MAC_LENGTH)))
                     self._authpass = False
                 elif not self.auth.verify_mac(rawdata, packet_end=_pend,
-                                            mac_begin=_pend):
+                                              mac_begin=_pend):
                     self._authpass = False
 
             # Clip off the MAC, if any
@@ -1107,7 +1107,7 @@ class ControlSession:
                                 % (f, len(fragments)), 1)
                         break
                 else:
-                    tempfraglist = [ntp.poly.polystr(f.extension) \
+                    tempfraglist = [ntp.poly.polystr(f.extension)
                                     for f in fragments]
                     self.response = ntp.poly.polybytes("".join(tempfraglist))
                     warndbg("Fragment collection ends. %d bytes "
@@ -1140,7 +1140,7 @@ class ControlSession:
                                                   self.debug, th))
 
         if ((rpkt.version() > ntp.magic.NTP_VERSION) or
-           (rpkt.version() < ntp.magic.NTP_OLDVERSION)):
+                (rpkt.version() < ntp.magic.NTP_OLDVERSION)):
             warndbg("Fragment received with version %d"
                     % rpkt.version(), 1)
             return False
@@ -1361,7 +1361,7 @@ class ControlSession:
                         idx = int(idx)
                     except ValueError:
                         raise ControlException(SERR_BADTAG % tag)
-                    ### Does not check missing/gappy entries
+                    # Does not check missing/gappy entries
                     if idx not in fake_list:
                         fake_dict[str(idx)] = {}
                         fake_list.append(idx)
@@ -1608,11 +1608,11 @@ def parse_mru_variables(variables):
         del variables['frags']
     if 'kod' in variables:
         variables['resany'] = variables.get('resany', 0) \
-                              | ntp.magic.RES_KOD
+            | ntp.magic.RES_KOD
         del variables['kod']
     if 'limited' in variables:
         variables['resany'] = variables.get('resany', 0) \
-                              | ntp.magic.RES_LIMITED
+            | ntp.magic.RES_LIMITED
         del variables['limited']
     return sorter, sortkey, frags
 
@@ -1702,7 +1702,7 @@ class Authenticator:
                     keytype = 'AES-128'
                 if len(passwd) > 20:
                     # if len(passwd) > 64:
-                        # print('AUTH: Truncating key %s to 256bits (32Bytes)' % keyid)
+                    # print('AUTH: Truncating key %s to 256bits (32Bytes)' % keyid)
                     passwd = ntp.util.hexstr2octets(passwd[:64])
                 self.passwords[int(keyid)] = (keytype, passwd)
 
@@ -1772,7 +1772,7 @@ class Authenticator:
             return False
         # typically preferred to avoid timing attacks client-side (in theory)
         try:
-            return hmac.compare_digest(mac, mac2) # supported 2.7.7+ and 3.3+
+            return hmac.compare_digest(mac, mac2)  # supported 2.7.7+ and 3.3+
         except AttributeError:
             return mac == mac2  # solves issue #666
 

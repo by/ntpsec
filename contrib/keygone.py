@@ -190,10 +190,12 @@ if __name__ == '__main__':
         sys.stderr.write('"initial" key number must be a positive integer')
     if args.number < 1:
         fail = True
-        sys.stderr.write('"number" of keys per group must be a positive integer')
+        sys.stderr.write(
+            '"number" of keys per group must be a positive integer')
     if args.gap < 0:
         fail = True
-        sys.stderr.write('the "gap" between groups must be non-negative integer')
+        sys.stderr.write(
+            'the "gap" between groups must be non-negative integer')
     if len(algos) < 1:
         fail = True
         sys.stderr.write('At least one algorithm must be specified')

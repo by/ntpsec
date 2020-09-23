@@ -2514,10 +2514,12 @@ class TestNtpclientsNtpsnmpd(unittest.TestCase):
                            b"\x00\x00\x00\x04blah"),
                          (AX.IndexAllocPDU(True, 1, 2, 3, True, True,
                                            (AX.Varbind(AX.VALUE_OID,
-                                                       AX.OID((1, 2, 3), False),
+                                                       AX.OID(
+                                                           (1, 2, 3), False),
                                                        AX.OID((4, 5, 6), False)),
                                             AX.Varbind(AX.VALUE_OCTET_STR,
-                                                       AX.OID((1, 2, 4), False),
+                                                       AX.OID(
+                                                           (1, 2, 4), False),
                                                        "blah"))),
                           True,
                           b""))

@@ -86,7 +86,8 @@ class AgentXPDU:
         self._hascontext = hascontext
 
     def packetVars(self):
-        "Assembles a list of class variables that it is desirable to print"
+        """Assembles a list of class variables that it is desirable to
+        print."""
         pktvars = {}
         names = dir(self)
         names.remove("context")
@@ -730,7 +731,8 @@ class ResponsePDU(AgentXPDU):
 
 
 def classifyOID(oid):
-    "Utility function to allow the user to send a bare tuple for some cases"
+    """Utility function to allow the user to send a bare tuple for some
+    cases."""
     if isinstance(oid, OID):
         return oid
     return OID(oid, False)

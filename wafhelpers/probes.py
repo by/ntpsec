@@ -1,11 +1,9 @@
-"""
-This module exists to contain custom probe functions so they don't clutter
-up the logic in the main configure.py.
-"""
+"""This module exists to contain custom probe functions so they don't clutter
+up the logic in the main configure.py."""
 
 
 def probe_header(ctx, header, prerequisites, mandatory=False, use=None):
-    "Check that a header (with its prerequisites) compiles."
+    """Check that a header (with its prerequisites) compiles."""
     src = ""
     for hdr in prerequisites + [header]:
         src += "#include <%s>\n" % hdr
@@ -24,7 +22,7 @@ def probe_header(ctx, header, prerequisites, mandatory=False, use=None):
 
 
 def probe_function(ctx, function, prerequisites, mandatory=False, use=None):
-    "Check that a function (with its prerequisites) compiles."
+    """Check that a function (with its prerequisites) compiles."""
     src = ""
     for hdr in prerequisites:
         src += "#include <%s>\n" % hdr

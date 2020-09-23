@@ -70,14 +70,14 @@ else:  # Python 3
         return bytes(s, encoding=master_encoding)
 
     def polyord(c):
-        "Polymorphic ord() function"
+        """Polymorphic ord() function."""
         if isinstance(c, str):
             return ord(c)
         else:
             return c
 
     def polychr(c):
-        "Polymorphic chr() function"
+        """Polymorphic chr() function."""
         if isinstance(c, int):
             return chr(c)
         else:

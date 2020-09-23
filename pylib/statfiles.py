@@ -19,7 +19,7 @@ import time
 
 
 class NTPStats:
-    "Gather statistics for a specified NTP site"
+    """Gather statistics for a specified NTP site."""
     SecondsInDay = 24*60*60
     DefaultPeriod = 7*24*60*60  # default 7 days, 604800 secs
     peermap = {}    # cached result of peersplit()
@@ -31,8 +31,10 @@ class NTPStats:
     @staticmethod
     def unixize(lines, starttime, endtime):
         """Extract first two fields, MJD and seconds past midnight.
+
         convert timestamp (MJD & seconds past midnight) to Unix time
-        Replace MJD+second with Unix time."""
+        Replace MJD+second with Unix time.
+        """
         # HOT LOOP!  Do not change w/o profiling before and after
         lines1 = []
         for line in lines:
@@ -56,13 +58,15 @@ class NTPStats:
 
     @staticmethod
     def timestamp(line):
-        "get Unix time from converted line."
+        """get Unix time from converted line."""
         return float(line.split()[0])
 
     @staticmethod
     def percentiles(percents, values):
         """Return given percentiles of a given row in a given set of entries.
-        assuming values are already split and sorted"""
+
+        assuming values are already split and sorted
+        """
         ret = {}
         length = len(values)
         if 1 >= length:
@@ -85,7 +89,7 @@ class NTPStats:
 
     @staticmethod
     def ip_label(key):
-        "Produce appropriate label for an IP address."
+        """Produce appropriate label for an IP address."""
         # If it's a new-style NTPsep clock label, pass it through,
         # Otherwise we expect it to be an IP address and the next guard fires
         if key[0].isdigit():
@@ -108,7 +112,7 @@ class NTPStats:
 
     def __init__(self, statsdir, sitename=None,
                  period=None, starttime=None, endtime=None):
-        "Grab content of logfiles, sorted by timestamp."
+        """Grab content of logfiles, sorted by timestamp."""
         if period is None:
             period = NTPStats.DefaultPeriod
         self.period = period
@@ -201,7 +205,9 @@ class NTPStats:
 
     def peersplit(self):
         """Return a dictionary mapping peerstats IPs to entry subsets.
-        This is very expensive, so cache the result"""
+
+        This is very expensive, so cache the result
+        """
         if self.peermap:
             return self.peermap
 
@@ -217,7 +223,7 @@ class NTPStats:
         return self.peermap
 
     def gpssplit(self):
-        "Return a dictionary mapping gps sources to entry subsets."
+        """Return a dictionary mapping gps sources to entry subsets."""
         gpsmap = {}
         for row in self.gpsd:
             try:
@@ -231,7 +237,7 @@ class NTPStats:
         return gpsmap
 
     def tempssplit(self):
-        "Return a dictionary mapping temperature sources to entry subsets."
+        """Return a dictionary mapping temperature sources to entry subsets."""
         tempsmap = {}
         for row in self.temps:
             try:
@@ -246,7 +252,10 @@ class NTPStats:
 
 
 def iso_to_posix(time_string):
-    "Accept timestamps in ISO 8661 format or numeric POSIX time. UTC only."
+    """Accept timestamps in ISO 8661 format or numeric POSIX time.
+
+    UTC only.
+    """
     if str(time_string).isdigit():
         return int(time_string)
     time_struct = time.strptime(time_string, "%Y-%m-%dT%H:%M:%S")
@@ -255,7 +264,7 @@ def iso_to_posix(time_string):
 
 
 def posix_to_iso(unix_time):
-    "ISO 8601 string in UTC from Unix time."
+    """ISO 8601 string in UTC from Unix time."""
     return time.strftime("%Y-%m-%dT%H:%M:%S", time.gmtime(unix_time))
 
 # end

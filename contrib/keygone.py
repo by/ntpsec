@@ -64,28 +64,28 @@ list_cmac_good = [
 
 
 class KeyGone():
-    'Set up, generate and output keys for NTPsec.'
+    """Set up, generate and output keys for NTPsec."""
 
     def __init__(self, start: int, gap: int):
-        'Set up key generation for NTPsec.'
+        """Set up key generation for NTPsec."""
         self.gap = min(0, gap)
         self.index = start
         self.backing = {}
 
     def __str__(self):
-        'Return a string containing the generated keys.'
+        """Return a string containing the generated keys."""
         _ = ''
         for row in self.backing:
             _ += '%d\t%s\t%s\n' % (row, *self.backing[row])
         return _
 
     def to_file(self, oname: str):
-        'Write the current keys to a file.'
+        """Write the current keys to a file."""
         with open(oname, 'w') as of:
             of.write(str(self))
 
     def do_link(self, oname: str, link: str):
-        'Write the current keys to a file and link to it elsewhere.'
+        """Write the current keys to a file and link to it elsewhere."""
         orig_umask = os.umask(stat.S_IWGRP | stat.S_IRWXO)
         os.umask(orig_umask)
         self.to_file(oname)
@@ -94,14 +94,14 @@ class KeyGone():
         os.symlink(oname, link)
 
     def add(self, algor: str, keys: int, length: int, hexed: bool = False):
-        'Generate a slew of new keys according to specs.'
+        """Generate a slew of new keys according to specs."""
         for _ in range(keys):
             self.backing[self.index] = [algor, self.gen_key(length, hexed)]
             self.index += 1
         self.index += self.gap
 
     def gen_key(self, length: int, hexed: bool) -> str:
-        'Generate a single key.'
+        """Generate a single key."""
         if hexed:
             return secrets.token_hex(length)
         result = ''
@@ -111,7 +111,7 @@ class KeyGone():
 
 
 def list_algos():
-    'List the available algorithms by buckets.'
+    """List the available algorithms by buckets."""
     chunks = []
     iterable = (('bad CMAC algos:', list_cmac_bad),
                 ('good CMAC algos:', list_cmac_good),

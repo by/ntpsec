@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"Common utility functions"
+"""Common utility functions."""
 # SPDX-License-Identifier: BSD-2-Clause
 
 from __future__ import print_function, division
@@ -59,7 +59,7 @@ def check_unicode():  # pragma: no cover
 
 def deunicode_units():  # pragma: no cover
     """Under certain conditions it is not possible to force unicode output,
-    this overwrites units that contain unicode with safe versions"""
+    this overwrites units that contain unicode with safe versions."""
     global UNIT_US
     global UNIT_PPK
     # Replacement units
@@ -84,8 +84,8 @@ PPM_VARS = ("frequency", "clk_wander")
 
 
 def dolog(logfp, text, debug, threshold):
-    """debug is the current debug value
-    threshold is the trigger for the current log"""
+    """debug is the current debug value threshold is the trigger for the
+    current log."""
     if logfp is None:
         return  # can turn off logging by supplying a None file descriptor
     text = rfc3339(time.time()) + " " + text + "\n"
@@ -96,8 +96,10 @@ def dolog(logfp, text, debug, threshold):
 
 def safeargcast(arg, castfunc, errtext, usage):
     """Attempts to typecast an argument, prints and dies on failure.
+
     errtext must contain a %s for splicing in the argument, and be
-    newline terminated."""
+    newline terminated.
+    """
     try:
         casted = castfunc(arg)
     except ValueError:
@@ -108,12 +110,12 @@ def safeargcast(arg, castfunc, errtext, usage):
 
 
 def stdversion():
-    "Returns the NTPsec version string in a standard format"
+    """Returns the NTPsec version string in a standard format."""
     return "ntpsec-%s" % "@NTPSEC_VERSION_EXTENDED@"
 
 
 def rfc3339(t):
-    "RFC 3339 string from Unix time, including fractional second."
+    """RFC 3339 string from Unix time, including fractional second."""
     rep = time.strftime("%Y-%m-%dT%H:%M:%S", time.gmtime(t))
     t = str(t)
     if "." in t:
@@ -141,7 +143,7 @@ def hexstr2octets(hexstr):
 
 
 def slicedata(data, slicepoint):
-    "Breaks a sequence into two pieces at the slice point"
+    """Breaks a sequence into two pieces at the slice point."""
     return data[:slicepoint], data[slicepoint:]
 
 
@@ -229,7 +231,7 @@ def parseConf(text):
 
 
 def stringfilt(data):
-    "Pretty print string of space separated numbers"
+    """Pretty print string of space separated numbers."""
     parts = data.split()
 
     cooked = []
@@ -244,7 +246,8 @@ def stringfilt(data):
 
 
 def stringfiltcooker(data):
-    "Cooks a filt* string of space separated numbers, expects milliseconds"
+    """Cooks a filt* string of space separated numbers, expects
+    milliseconds."""
     parts = data.split()
     oomcount = {}
     minscale = -100000  # Keep track of the maxdownscale for each value
@@ -278,14 +281,14 @@ def stringfiltcooker(data):
 
 
 def getunitgroup(unit):
-    "Returns the unit group which contains a given unit"
+    """Returns the unit group which contains a given unit."""
     for group in unitgroups:
         if unit in group:
             return group
 
 
 def oomsbetweenunits(a, b):
-    "Calculates how many orders of magnitude separate two units"
+    """Calculates how many orders of magnitude separate two units."""
     group = getunitgroup(a)
     if b is None:  # Caller is asking for the distance from the base unit
         return group.index(a) * 3
@@ -297,7 +300,7 @@ def oomsbetweenunits(a, b):
 
 
 def breaknumberstring(value):
-    "Breaks a number string into (aboveDecimal, belowDecimal, isNegative?)"
+    """Breaks a number string into (aboveDecimal, belowDecimal, isNegative?)"""
     if value[0] == "-":
         value = value[1:]
         negative = True
@@ -312,7 +315,7 @@ def breaknumberstring(value):
 
 
 def gluenumberstring(above, below, isnegative):
-    "Glues together parts of a number string"
+    """Glues together parts of a number string."""
     if above == "":
         above = "0"
     if below:
@@ -325,7 +328,7 @@ def gluenumberstring(above, below, isnegative):
 
 
 def maxdownscale(value):
-    "Maximum units a value can be scaled down without inventing data"
+    """Maximum units a value can be scaled down without inventing data."""
     if "." in value:
         digitcount = len(value.split(".")[1])
         # Return a negative so it can be fed directly to a scaling function
@@ -336,7 +339,7 @@ def maxdownscale(value):
 
 
 def rescalestring(value, unitsscaled):
-    "Rescale a number string by a given number of units"
+    """Rescale a number string by a given number of units."""
     whole, dec, negative = breaknumberstring(value)
     if unitsscaled == 0:
         # This may seem redundant, but glue forces certain formatting details
@@ -371,14 +374,14 @@ def rescalestring(value, unitsscaled):
 
 
 def formatzero(value):
-    "Scale a zero value for the unit with the highest available precision"
+    """Scale a zero value for the unit with the highest available precision."""
     scale = maxdownscale(value)
     newvalue = rescalestring(value, scale).lstrip("-")
     return (newvalue, scale)
 
 
 def scalestring(value):
-    "Scales a number string to fit in the range 1.0-999.9"
+    """Scales a number string to fit in the range 1.0-999.9."""
     if isstringzero(value):
         return formatzero(value)
     whole, dec, negative = breaknumberstring(value)
@@ -414,7 +417,8 @@ def scalestring(value):
 
 
 def fitinfield(value, fieldsize):
-    "Attempt to fit value into a field, preserving as much data as possible"
+    """Attempt to fit value into a field, preserving as much data as
+    possible."""
     vallen = len(value)
     if fieldsize is None:
         newvalue = value
@@ -444,7 +448,7 @@ def fitinfield(value, fieldsize):
 
 
 def cropprecision(value, ooms):
-    "Crops digits below the maximum precision"
+    """Crops digits below the maximum precision."""
     if "." not in value:  # No decimals, nothing to crop
         return value
     if ooms == 0:  # We are at the baseunit, crop it all
@@ -459,7 +463,7 @@ def cropprecision(value, ooms):
 
 
 def isstringzero(value):
-    "Detects whether a string is equal to zero"
+    """Detects whether a string is equal to zero."""
     for i in value:
         if i not in ("-", ".", "0"):
             return False
@@ -467,7 +471,7 @@ def isstringzero(value):
 
 
 def unitrelativeto(unit, move):
-    "Returns a unit at a different scale from the input unit"
+    """Returns a unit at a different scale from the input unit."""
     for group in unitgroups:
         if unit in group:
             if move is None:  # asking for the base unit
@@ -483,7 +487,7 @@ def unitrelativeto(unit, move):
 
 
 def unitifyvar(value, varname, baseunit=None, width=8, unitSpace=False):
-    "Call unitify() with the correct units for varname"
+    """Call unitify() with the correct units for varname."""
     if varname in S_VARS:
         start = UNIT_S
     elif varname in MS_VARS:
@@ -496,7 +500,10 @@ def unitifyvar(value, varname, baseunit=None, width=8, unitSpace=False):
 
 
 def unitify(value, startingunit, baseunit=None, width=8, unitSpace=False):
-    "Formats a numberstring with relevant units. Attempts to fit in width."
+    """Formats a numberstring with relevant units.
+
+    Attempts to fit in width.
+    """
     if baseunit is None:
         baseunit = getunitgroup(startingunit)[0]
     ooms = oomsbetweenunits(startingunit, baseunit)
@@ -526,7 +533,7 @@ def unitify(value, startingunit, baseunit=None, width=8, unitSpace=False):
 
 
 def f8dot4(f):
-    "Scaled floating point formatting to fit in 8 characters"
+    """Scaled floating point formatting to fit in 8 characters."""
 
     if isinstance(f, str):
         # a string? pass it on as a signal
@@ -564,7 +571,7 @@ def f8dot4(f):
 
 
 def f8dot3(f):
-    "Scaled floating point formatting to fit in 8 characters"
+    """Scaled floating point formatting to fit in 8 characters."""
     if isinstance(f, str):
         # a string? pass it on as a signal
         return "%8s" % f
@@ -597,7 +604,7 @@ def f8dot3(f):
 
 
 def monoclock():
-    "Try to get a monotonic clock value unaffected by NTP stepping."
+    """Try to get a monotonic clock value unaffected by NTP stepping."""
     try:
         # Available in Python 3.3 and up.
         return time.monotonic()
@@ -606,7 +613,7 @@ def monoclock():
 
 
 class Cache:
-    "Simple time-based cache"
+    """Simple time-based cache."""
 
     def __init__(self, defaultTimeout=300):  # 5 min default TTL
         self.defaultTimeout = defaultTimeout
@@ -633,7 +640,7 @@ canonicalization_cache = Cache()
 
 
 def canonicalize_dns(inhost, family=socket.AF_UNSPEC):
-    "Canonicalize a hostname or numeric IP address."
+    """Canonicalize a hostname or numeric IP address."""
     resname = canonicalization_cache.get(inhost)
     if resname is not None:
         return resname
@@ -674,7 +681,7 @@ if str is bytes:  # We are on python 2.x
 
 
 def termsize():  # pragma: no cover
-    "Return the current terminal size."
+    """Return the current terminal size."""
     # Alternatives at http://stackoverflow.com/questions/566746
     # The way this is used makes it not a big deal if the default is wrong.
     size = (80, 24)
@@ -698,7 +705,7 @@ def termsize():  # pragma: no cover
 
 
 class PeerStatusWord:
-    "A peer status word from readstats(), dissected for display"
+    """A peer status word from readstats(), dissected for display."""
 
     def __init__(self, status, pktversion=ntp.magic.NTP_VERSION):
         # Event
@@ -775,7 +782,7 @@ class PeerStatusWord:
 
 
 def cook(variables, showunits=False, sep=", "):
-    "Cooked-mode variable display."
+    """Cooked-mode variable display."""
     width = ntp.util.termsize().width - 2
     text = ""
     specials = ("filtdelay", "filtoffset", "filtdisp", "filterror")
@@ -866,7 +873,7 @@ def cook(variables, showunits=False, sep=", "):
 
 
 class PeerSummary:
-    "Reusable report generator for peer statistics"
+    """Reusable report generator for peer statistics."""
 
     def __init__(self, displaymode, pktversion, showhostnames,
                  wideremote, showunits=False, termwidth=None,
@@ -899,7 +906,7 @@ class PeerSummary:
 
     @staticmethod
     def prettyinterval(diff):
-        "Print an interval in natural time units."
+        """Print an interval in natural time units."""
         if not isinstance(diff, int) or diff <= 0:
             return '-'
         if diff <= 2048:
@@ -915,7 +922,7 @@ class PeerSummary:
 
     @staticmethod
     def high_truncate(hostname, maxlen):
-        "Truncate on the left using leading _ to indicate 'more'."
+        """Truncate on the left using leading _ to indicate 'more'."""
         # Used for local IPv6 addresses, best distinguished by low bits
         if len(hostname) <= maxlen:
             return hostname
@@ -924,11 +931,11 @@ class PeerSummary:
 
     @staticmethod
     def is_clock(variables):
-        "Does a set of variables look like it returned from a clock?"
+        """Does a set of variables look like it returned from a clock?"""
         return "srchost" in variables and '(' in variables["srchost"][0]
 
     def header(self):
-        "Column headers for peer display"
+        """Column headers for peer display."""
         if self.displaymode == "apeers":
             self.__header = self.__remote + \
                 "   refid   assid  ".ljust(self.refidwidth) + \
@@ -944,11 +951,11 @@ class PeerSummary:
         return self.__header
 
     def width(self):
-        "Width of display"
+        """Width of display."""
         return 79 + self.horizontal_slack
 
     def summary(self, rstatus, variables, associd):
-        "Peer status summary line."
+        """Peer status summary line."""
         clock_name = ''
         dstadr_refid = ""
         dstport = 0
@@ -1219,14 +1226,14 @@ class PeerSummary:
         return line
 
     def intervals(self):
-        "Return and flush the list of actual poll intervals."
+        """Return and flush the list of actual poll intervals."""
         res = self.polls[:]
         self.polls = []
         return res
 
 
 class MRUSummary:
-    "Reusable class for MRU entry summary generation."
+    """Reusable class for MRU entry summary generation."""
 
     def __init__(self, showhostnames, wideremote=False,
                  debug=0, logfp=sys.stderr):
@@ -1317,7 +1324,7 @@ class MRUSummary:
 
 
 class ReslistSummary:
-    "Reusable class for reslist entry summary generation."
+    """Reusable class for reslist entry summary generation."""
     header = """\
    hits    addr/prefix or addr mask
            restrictions
@@ -1357,7 +1364,7 @@ class ReslistSummary:
 
 
 class IfstatsSummary:
-    "Reusable class for ifstats entry summary generation."
+    """Reusable class for ifstats entry summary generation."""
     header = """\
     interface name                                  send
  #  address/broadcast     drop flag received sent failed peers   uptime
@@ -1416,7 +1423,8 @@ try:
     from collections import OrderedDict
 except ImportError:  # pragma: no cover
     class OrderedDict(dict):
-        "A stupid simple implementation in order to be back-portable to 2.6"
+        """A stupid simple implementation in order to be back-portable to
+        2.6."""
 
         # This can be simple because it doesn't need to be fast.
         # The programs that use it only have to run at human speed,

@@ -262,7 +262,7 @@ MAX_BARE_MAC_LENGTH = 20
 
 
 class Packet:
-    "Encapsulate an NTP fragment"
+    """Encapsulate an NTP fragment."""
     # The following two methods are copied from macros in includes/control.h
     @staticmethod
     def VN_MODE(v, m):
@@ -311,7 +311,7 @@ class SyncException(BaseException):  # pragma: no cover
 
 
 class SyncPacket(Packet):
-    "Mode 1-5 time-synchronization packet, including SNTP."
+    """Mode 1-5 time-synchronization packet, including SNTP."""
     format = "!BBBbIIIQQQQ"
     HEADER_LEN = 48
     UNIX_EPOCH = 2208988800     # Midnight 1 Jan 1970 in secs since NTP epoch
@@ -384,19 +384,19 @@ class SyncPacket(Packet):
 
     @staticmethod
     def ntp_to_posix(t):
-        "Scale from NTP time to POSIX time"
+        """Scale from NTP time to POSIX time."""
         # Note: assumes we're in the same NTP era as the transmitter...
         return (t / (2**32)) - SyncPacket.UNIX_EPOCH
 
     @staticmethod
     def posix_to_ntp(t):
-        "Scale from POSIX time to NTP time"
+        """Scale from POSIX time to NTP time."""
         # Note: assumes we're in the same NTP era as the transmitter...
         # This receives floats, can't use shifts
         return int((t + SyncPacket.UNIX_EPOCH) * 2**32)
 
     def posixize(self):
-        "Rescale all timestamps to POSIX time."
+        """Rescale all timestamps to POSIX time."""
         if not self.rescaled:
             self.rescaled = True
             self.root_delay >>= 16
@@ -424,16 +424,16 @@ class SyncPacket(Packet):
         return self.received
 
     def delta(self):
-        "Packet flight time"
+        """Packet flight time."""
         return (self.t4() - self.t1()) - (self.t3() - self.t2())
 
     def epsilon(self):
-        "Residual error due to clock imprecision."
+        """Residual error due to clock imprecision."""
         # FIXME: Include client imprecision.
         return SyncPacket.PHI * (self.t4() - self.t1()) + 2**self.precision
 
     def synchd(self):
-        "Synchronization distance, estimates worst-case error in seconds"
+        """Synchronization distance, estimates worst-case error in seconds."""
         # This is "lambda" in NTP-speak, but that's a Python keyword
         return abs(self.delta()/2 + self.epsilon())
 
@@ -442,7 +442,7 @@ class SyncPacket(Packet):
         return ((self.t2()-self.t1())+(self.t3()-self.t4()))/2
 
     def flatten(self):
-        "Flatten the packet into an octet sequence."
+        """Flatten the packet into an octet sequence."""
         body = struct.pack(SyncPacket.format,
                            self.li_vn_mode,
                            self.stratum,
@@ -458,18 +458,18 @@ class SyncPacket(Packet):
         return body + self.extension
 
     def refid_octets(self):
-        "Analyze refid into octets."
+        """Analyze refid into octets."""
         return ((self.refid >> 24) & 0xff,
                 (self.refid >> 16) & 0xff,
                 (self.refid >> 8) & 0xff,
                 self.refid & 0xff)
 
     def refid_as_string(self):
-        "Sometimes it's a clock name or KOD type"
+        """Sometimes it's a clock name or KOD type."""
         return ntp.poly.polystr(struct.pack(*(("BBBB",) + self.refid_octets())))
 
     def refid_as_address(self):
-        "Sometimes it's an IPV4 address."
+        """Sometimes it's an IPV4 address."""
         return ntp.poly.polystr("%d.%d.%d.%d" % self.refid_octets())
 
     def is_crypto_nak(self):
@@ -482,7 +482,7 @@ class SyncPacket(Packet):
         return len(self.mac) == 24
 
     def __repr__(self):
-        "Represent a posixized sync packet in an eyeball-friendly format."
+        """Represent a posixized sync packet in an eyeball-friendly format."""
         r = "<NTP:%s:%d:%d:" % (self.leap(), self.version(), self.mode())
         r += "%f:%f" % (self.root_delay, self.root_dispersion)
         rs = self.refid_as_string()
@@ -506,7 +506,7 @@ class SyncPacket(Packet):
 
 
 class ControlPacket(Packet):
-    "Mode 6 request/response."
+    """Mode 6 request/response."""
 
     def __init__(self, session, opcode=0, associd=0, qdata=''):
         Packet.__init__(self, mode=ntp.magic.MODE_CONTROL,
@@ -541,7 +541,7 @@ class ControlPacket(Packet):
         return self.count + self.offset
 
     def stats(self):
-        "Return statistics on a fragment."
+        """Return statistics on a fragment."""
         return "%5d %5d\t%3d octets\n" % (self.offset, self.end(), self.count)
 
     def analyze(self, rawdata):
@@ -558,7 +558,7 @@ class ControlPacket(Packet):
         return (self.sequence, self.status, self.associd, self.offset)
 
     def flatten(self):
-        "Flatten the packet into an octet sequence."
+        """Flatten the packet into an octet sequence."""
         body = struct.pack(ControlPacket.format,
                            self.li_vn_mode,
                            self.r_e_m_op,
@@ -574,7 +574,7 @@ class ControlPacket(Packet):
 
 
 class Peer:
-    "The information we have about an NTP peer."
+    """The information we have about an NTP peer."""
 
     def __init__(self, session, associd, status):
         self.session = session
@@ -618,7 +618,7 @@ SERR_NOTRUST = "***No trusted keys have been declared"
 
 
 def dump_hex_printable(xdata, outfp=sys.stdout):
-    "Dump a packet in hex, in a familiar hex format"
+    """Dump a packet in hex, in a familiar hex format."""
     rowsize = 16
     while xdata:
         # Slice one row off of our data
@@ -638,7 +638,7 @@ def dump_hex_printable(xdata, outfp=sys.stdout):
 
 
 class MRUEntry:
-    "A traffic entry for an MRU list."
+    """A traffic entry for an MRU list."""
 
     def __init__(self):
         self.addr = None        # text of IPv4 or IPv6 address and port
@@ -678,14 +678,15 @@ class MRUEntry:
 
 
 class MRUList:
-    "A sequence of address-timespan pairs returned by ntpd in one response."
+    """A sequence of address-timespan pairs returned by ntpd in one
+    response."""
 
     def __init__(self):
         self.entries = []       # A list of MRUEntry objects
         self.now = None         # server timestamp marking end of operation
 
     def is_complete(self):
-        "Is the server done shipping entries for this span?"
+        """Is the server done shipping entries for this span?"""
         return self.now is not None
 
     def __repr__(self):
@@ -703,7 +704,7 @@ class ControlException(BaseException):
 
 
 class ControlSession:
-    "A session to a host"
+    """A session to a host."""
     MRU_ROW_LIMIT = 256
     _authpass = True
     server_errors = {
@@ -750,11 +751,11 @@ class ControlSession:
             self.sock = None
 
     def havehost(self):
-        "Is the session connected to a host?"
+        """Is the session connected to a host?"""
         return self.sock is not None
 
     def __lookuphost(self, hname, fam):
-        "Try different ways to interpret an address and family"
+        """Try different ways to interpret an address and family."""
         if hname.startswith("["):
             hname = hname[1:-1]
         # First try to resolve it as an ip address and if that fails,
@@ -838,7 +839,7 @@ class ControlSession:
         return True
 
     def password(self):
-        "Get a keyid and the password if we don't have one."
+        """Get a keyid and the password if we don't have one."""
         if self.keyid is None:
             if self.auth is None:
                 try:
@@ -879,7 +880,7 @@ class ControlSession:
             self.passwd = passwd
 
     def sendpkt(self, xdata):
-        "Send a packet to the host."
+        """Send a packet to the host."""
         while len(xdata) % 4:
             xdata += b"\x00"
         ntp.util.dolog(self.logfp,
@@ -899,7 +900,7 @@ class ControlSession:
         return 0
 
     def sendrequest(self, opcode, associd, qdata, auth=False):
-        "Ship an ntpq request packet to a server."
+        """Ship an ntpq request packet to a server."""
         if (self.debug >= 1) and (self.logfp is not None):
             # special, not replacing with dolog()
             if self.debug >= 3:
@@ -952,7 +953,7 @@ class ControlSession:
         return pkt.send()
 
     def getresponse(self, opcode, associd, timeo):
-        "Get a response expected to match a given opcode and associd."
+        """Get a response expected to match a given opcode and associd."""
         # This is pretty tricky.  We may get between 1 and MAXFRAG packets
         # back in response to the request.  We peel the data out of
         # each packet and collect it in one long block.  When the last
@@ -1194,7 +1195,7 @@ class ControlSession:
         return True
 
     def doquery(self, opcode, associd=0, qdata="", auth=False):
-        "send a request and save the response"
+        """send a request and save the response."""
         if not self.havehost():
             raise ControlException(SERR_NOHOST)
         retry = True
@@ -1215,7 +1216,7 @@ class ControlSession:
         return res
 
     def readstat(self, associd=0):
-        "Read peer status, or throw an exception."
+        """Read peer status, or throw an exception."""
         self.doquery(opcode=ntp.control.CTL_OP_READSTAT, associd=associd)
         if len(self.response) % 4:
             raise ControlException(SERR_BADLENGTH)
@@ -1229,7 +1230,7 @@ class ControlSession:
         return idlist
 
     def __parse_varlist(self, raw=False):
-        "Parse a response as a textual varlist."
+        """Parse a response as a textual varlist."""
         # Strip out NULs and binary garbage from text;
         # ntpd seems prone to generate these, especially
         # in reslist responses.
@@ -1283,7 +1284,7 @@ class ControlSession:
 
     def readvar(self, associd=0, varlist=None,
                 opcode=ntp.control.CTL_OP_READVAR, raw=False):
-        "Read system vars from the host as a dict, or throw an exception."
+        """Read system vars from the host as a dict, or throw an exception."""
         if varlist is None:
             qdata = ""
         else:
@@ -1292,7 +1293,10 @@ class ControlSession:
         return self.__parse_varlist(raw)
 
     def config(self, configtext):
-        "Send configuration text to the daemon. Return True if accepted."
+        """Send configuration text to the daemon.
+
+        Return True if accepted.
+        """
         self.doquery(opcode=ntp.control.CTL_OP_CONFIGURE,
                      qdata=configtext, auth=True)
         # Copes with an implementation error - ntpd uses putdata without
@@ -1305,10 +1309,10 @@ class ControlSession:
         return self.response == ntp.poly.polybytes("Config Succeeded")
 
     def fetch_nonce(self):
+        """Ask for, and get, a nonce that can be replayed.
+
+        This combats source address spoofing
         """
-Ask for, and get, a nonce that can be replayed.
-This combats source address spoofing
-"""
         for i in range(4):
             # retry 4 times
             self.doquery(opcode=ntp.control.CTL_OP_REQ_NONCE)
@@ -1327,7 +1331,7 @@ This combats source address spoofing
         raise ControlException(SERR_BADNONCE)
 
     def __mru_analyze(self, variables, span, direct):
-        """Extracts data from the key/value list into a more useful form"""
+        """Extracts data from the key/value list into a more useful form."""
         mru = None
         nonce = None
         items = list(variables.items())
@@ -1417,7 +1421,7 @@ This combats source address spoofing
         return restarted_count, cap_frags, limit, frags
 
     def mrulist(self, variables=None, rawhook=None, direct=None):
-        "Retrieve MRU list data"
+        """Retrieve MRU list data."""
         restarted_count = 0
         cap_frags = True
         sorter = None
@@ -1523,7 +1527,7 @@ This combats source address spoofing
         return span
 
     def __ordlist(self, listtype):
-        "Retrieve ordered-list data."
+        """Retrieve ordered-list data."""
         self.doquery(opcode=ntp.control.CTL_OP_READ_ORDLIST_A,
                      qdata=listtype, auth=True)
         stanzas = []
@@ -1538,11 +1542,11 @@ This combats source address spoofing
         return stanzas
 
     def reslist(self):
-        "Retrieve reslist data."
+        """Retrieve reslist data."""
         return self.__ordlist("addr_restrictions")
 
     def ifstats(self):
-        "Retrieve ifstats data."
+        """Retrieve ifstats data."""
         return self.__ordlist("ifstats")
 
 
@@ -1681,7 +1685,7 @@ def mru_kv_key(token):
 
 
 class Authenticator:
-    "MAC authentication manager for NTP packets."
+    """MAC authentication manager for NTP packets."""
 
     def __init__(self, keyfile=None):
         # We allow I/O and permission errors upward deliberately
@@ -1703,15 +1707,15 @@ class Authenticator:
                 self.passwords[int(keyid)] = (keytype, passwd)
 
     def __len__(self):
-        'return the number of keytype/passwd tuples stored'
+        """return the number of keytype/passwd tuples stored."""
         return len(self.passwords)
 
     def __getitem__(self, keyid):
-        'get a keytype/passwd tuple by keyid'
+        """get a keytype/passwd tuple by keyid."""
         return self.passwords.get(keyid)
 
     def control(self, keyid=None):
-        "Get the keytype/passwd tuple that controls localhost and its id"
+        """Get the keytype/passwd tuple that controls localhost and its id."""
         if keyid is not None:
             if keyid in self.passwords:
                 return (keyid,) + self.passwords[keyid]
@@ -1732,7 +1736,7 @@ class Authenticator:
 
     @staticmethod
     def compute_mac(payload, keyid, keytype, passwd):
-        'Create the authentication payload to send'
+        """Create the authentication payload to send."""
         if not ntp.ntpc.checkname(keytype):
             return False
         mac2 = ntp.ntpc.mac(ntp.poly.polybytes(payload),
@@ -1743,14 +1747,15 @@ class Authenticator:
 
     @staticmethod
     def have_mac(packet):
-        "Does this packet have a MAC?"
+        """Does this packet have a MAC?"""
         # According to RFC 5909 7.5 the MAC is always present when an extension
         # field is present. Note: this crude test will fail on Mode 6 packets.
         # On those you have to go in and look at the count.
         return len(packet) > ntp.magic.LEN_PKT_NOMAC
 
     def verify_mac(self, packet, packet_end=48, mac_begin=48):
-        "Does the MAC on this packet verify according to credentials we have?"
+        """Does the MAC on this packet verify according to credentials we
+        have?"""
         payload = packet[:packet_end]
         keyid = packet[mac_begin:mac_begin+KEYID_LENGTH]
         mac = packet[mac_begin+KEYID_LENGTH:]

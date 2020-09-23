@@ -106,15 +106,15 @@ class MIBControl:
 
     # These exist instead of just using getOID_core so semantics are clearer
     def getOID(self, searchoid, returnGenerator=False):
-        "Get the requested OID"
+        """Get the requested OID."""
         return self.getOID_core(False, searchoid, returnGenerator)
 
     def getNextOID(self, searchoid, returnGenerator=False):
-        "Get the next lexicographical OID"
+        """Get the next lexicographical OID."""
         return self.getOID_core(True, searchoid, returnGenerator)
 
     def getOIDsInRange(self, oidrange, firstOnly=False):
-        "Get a list of every (optionally the first) OID in a range"
+        """Get a list of every (optionally the first) OID in a range."""
         oids = []
         gen = walkMIBTree(self.oidTree, self.mibRoot)
         # Find the first OID
@@ -246,7 +246,8 @@ class PacketControl:
         self.stillConnected = True
 
     def waitForResponse(self, opkt, ignoreSID=False):
-        "Wait for a response to a specific packet, dropping everything else"
+        """Wait for a response to a specific packet, dropping everything
+        else."""
         while True:
             self.packetEater()
             while self.receivedPackets:
@@ -263,7 +264,7 @@ class PacketControl:
             time.sleep(self.spinGap)
 
     def checkResponses(self):
-        "Check for expected responses that have timed out"
+        """Check for expected responses that have timed out."""
         currentTime = time.time()
         for key in list(self.packetLog.keys()):
             expiration, originalPkt, callback = self.packetLog[key]
@@ -273,7 +274,8 @@ class PacketControl:
                 del self.packetLog[key]
 
     def packetEater(self):
-        "Slurps data from the input buffer and tries to parse packets from it"
+        """Slurps data from the input buffer and tries to parse packets from
+        it."""
         self.pollSocket()
         while True:
             datalen = len(self.receivedData)
@@ -345,7 +347,7 @@ class PacketControl:
         self.sendPacket(err, False)
 
     def pollSocket(self):
-        "Reads all currently available data from the socket, non-blocking"
+        """Reads all currently available data from the socket, non-blocking."""
         data = b""
         while True:
             tmp = select.select([self.socket], [], [], 0)[0]

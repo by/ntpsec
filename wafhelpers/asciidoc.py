@@ -1,4 +1,4 @@
-'''Most of the functionality for building HTML and man pages from AsciiDoc.'''
+"""Most of the functionality for building HTML and man pages from AsciiDoc."""
 
 import re
 
@@ -7,7 +7,7 @@ from waflib.TaskGen import extension  # pylint: disable=import-error
 
 
 def options(opt):
-    'Add command line options for AsciiDoc processing.'
+    """Add command line options for AsciiDoc processing."""
     grp = opt.add_option_group('NTP documentation configure options')
     grp.add_option('--disable-doc', action='store_true',
                    default=False, help='Disable HTML document building.')
@@ -20,7 +20,7 @@ def options(opt):
 
 
 def configure(ctx):
-    'Set options from the extended environment and command line arguments.'
+    """Set options from the extended environment and command line arguments."""
 
     if ctx.options.disable_doc and ctx.options.enable_doc:
         ctx.fatal('--disable-doc and --enable-doc conflict.')
@@ -128,7 +128,7 @@ def configure(ctx):
 
 
 def build(ctx):
-    'Set processor noise level and set HTML pages to build.'
+    """Set processor noise level and set HTML pages to build."""
     from waflib.Logs import verbose  # pylint: disable=import-error
     if verbose > 1:  # Pass verbosity to AsciiDoc toolchain
         if ctx.env.ARGS_DOC:
@@ -140,7 +140,7 @@ def build(ctx):
 
 
 class html(Task.Task):
-    'Define HTML build process.'
+    """Define HTML build process."""
     # Optional weight to tune the priority for task instances.
     # The higher, the earlier. The weight only applies to single task objects.
     weight = 3  # set arbitrarily high to be first as to not slow down later tasks
@@ -149,14 +149,14 @@ class html(Task.Task):
 
 
 class man(Task.Task):
-    'Define manpage build process.'
+    """Define manpage build process."""
     weight = 2  # set arbitrarily high to be second as to not slow down later tasks (Failed)
     run_str = '${ARGS_MAN} ${SRC[0].abspath()}'
 
 
 @extension('.adoc')
 def run_html(self, node):
-    'Add HTML build caller function.'
+    """Add HTML build caller function."""
     out = node.change_ext('.html')
     tsk = self.create_task('html', node, [out])
     tsk.cwd = node.parent.get_bld().abspath()
@@ -164,7 +164,7 @@ def run_html(self, node):
 
 @extension('.man-tmp')
 def run_manpage(self, node):
-    'Add manpage build caller function.'
+    """Add manpage build caller function."""
     n_file = node.path_from(self.bld.bldnode)
     out = '%s.%s' % (n_file.replace('-man.adoc.man-tmp', ''), self.section)
     out_n = self.bld.path.find_or_declare(out)

@@ -32,15 +32,15 @@ other projects.
 Features
 --------
 
-* compatible with C89
-* no dependencies (even libc!)
-* highly portable (tested on x86/amd64, ARM, AVR)
-* about 200 lines of code
-* extremely small code footprint
-* API contains only 2 functions
-* no dynamic memory allocation
-* incremental single-pass parsing
-* library code is covered with unit-tests
+*   compatible with C89
+*   no dependencies (even libc!)
+*   highly portable (tested on x86/amd64, ARM, AVR)
+*   about 200 lines of code
+*   extremely small code footprint
+*   API contains only 2 functions
+*   no dynamic memory allocation
+*   incremental single-pass parsing
+*   library code is covered with unit-tests
 
 Design
 ------
@@ -51,9 +51,9 @@ The rudimentary jsmn object is a **token**. Let's consider a JSON string:
 
 It holds the following tokens:
 
-* Object: `{ "name" : "Jack", "age" : 27}` (the whole object)
-* Strings: `"name"`, `"Jack"`, `"age"` (keys and some values)
-* Number: `27`
+*   Object: `{ "name" : "Jack", "age" : 27}` (the whole object)
+*   Strings: `"name"`, `"Jack"`, `"age"` (keys and some values)
+*   Number: `27`
 
 In jsmn, tokens do not hold any data, but point to token boundaries in JSON
 string instead. In the example above jsmn will create tokens like: Object
@@ -62,12 +62,14 @@ string instead. In the example above jsmn will create tokens like: Object
 Every jsmn token has a type, which indicates the type of corresponding JSON
 token. jsmn supports the following token types:
 
-* Object - a container of key-value pairs, e.g.:
+*   Object - a container of key-value pairs, e.g.:
 	`{ "foo":"bar", "x":0.3 }`
-* Array - a sequence of values, e.g.:
+
+*   Array - a sequence of values, e.g.:
 	`[ 1, 2, 3 ]`
-* String - a quoted sequence of chars, e.g.: `"foo"`
-* Primitive - a number, a boolean (`true`, `false`) or `null`
+
+*   String - a quoted sequence of chars, e.g.: `"foo"`
+*   Primitive - a number, a boolean (`true`, `false`) or `null`
 
 Besides start/end positions, jsmn tokens for complex types (like arrays
 or objects) also contain a number of child items, so you can easily follow
@@ -81,15 +83,15 @@ Usage
 
 Download `jsmn.h`, include it, done.
 
-```
-#include "jsmn.h"
+```c
+    #include "jsmn.h"
 
-...
-jsmn_parser p;
-jsmntok_t t[128]; /* We expect no more than 128 JSON tokens */
+    ...
+    jsmn_parser p;
+    jsmntok_t t[128]; /* We expect no more than 128 JSON tokens */
 
-jsmn_init(&p);
-r = jsmn_parse(&p, s, strlen(s), t, 128);
+    jsmn_init(&p);
+    r = jsmn_parse(&p, s, strlen(s), t, 128);
 ```
 
 Since jsmn is a single-header, header-only library, for more complex use cases
@@ -97,13 +99,13 @@ you might need to define additional macros. `#define JSMN_STATIC` hides all
 jsmn API symbols by making them static. Also, if you want to include `jsmn.h`
 from multiple C files, to avoid duplication of symbols you may define  `JSMN_HEADER` macro.
 
-```
-/* In every .c file that uses jsmn include only declarations: */
-#define JSMN_HEADER
-#include "jsmn.h"
+```c
+    /* In every .c file that uses jsmn include only declarations: */
+    #define JSMN_HEADER
+    #include "jsmn.h"
 
-/* Additionally, create one jsmn.c file for jsmn implementation: */
-#include "jsmn.h"
+    /* Additionally, create one jsmn.c file for jsmn implementation: */
+    #include "jsmn.h"
 ```
 
 API
@@ -123,9 +125,9 @@ Token types are described by `jsmntype_t`:
 numbers, booleans and null, because one can easily tell the type using the
 first character:
 
-* <code>'t', 'f'</code> - boolean 
-* <code>'n'</code> - null
-* <code>'-', '0'..'9'</code> - number
+*   <code>'t', 'f'</code> - boolean 
+*   <code>'n'</code> - null
+*   <code>'-', '0'..'9'</code> - number
 
 Token is an object of `jsmntok_t` type:
 
@@ -163,9 +165,9 @@ string. This can be useful if you don't know yet how many tokens to allocate.
 
 If something goes wrong, you will get an error. Error will be one of these:
 
-* `JSMN_ERROR_INVAL` - bad token, JSON string is corrupted
-* `JSMN_ERROR_NOMEM` - not enough tokens, JSON string is too large
-* `JSMN_ERROR_PART` - JSON string is too short, expecting more JSON data
+*   `JSMN_ERROR_INVAL` - bad token, JSON string is corrupted
+*   `JSMN_ERROR_NOMEM` - not enough tokens, JSON string is too large
+*   `JSMN_ERROR_PART` - JSON string is too short, expecting more JSON data
 
 If you get `JSMN_ERROR_NOMEM`, you can re-allocate more tokens and call
 `jsmn_parse` once more.  If you read json data from the stream, you can

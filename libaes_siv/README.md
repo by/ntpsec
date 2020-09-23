@@ -33,14 +33,14 @@ scheme](https://en.wikipedia.org/wiki/Deterministic_encryption).
 Here are a couple common situations where AES-SIV may be an
 appropriate choice of AEAD scheme:
 
-1. You can't count on the system doing the encrypting to reliably
-   generate a unique nonce for every message. For example, the system
-   may be an embedded device with no good entropy source, or may be a
-   VM subject to be snapshotted and restored.
+1.  You can't count on the system doing the encrypting to reliably
+    generate a unique nonce for every message. For example, the system
+    may be an embedded device with no good entropy source, or may be a
+    VM subject to be snapshotted and restored.
 
-2. You want your encryption to be deterministic so that an
-   intermediating party such as a caching proxy, provided only with
-   ciphertext, can perform deduplication.
+2.  You want your encryption to be deterministic so that an
+    intermediating party such as a caching proxy, provided only with
+    ciphertext, can perform deduplication.
 
 The drawback to SIV mode is that it requires two passes over its
 input. This makes it potentially clumsy for use with large messages
@@ -61,23 +61,26 @@ and keys for AES-256-SIV are 512 bits long.
 
 Build dependencies:
 
-* Any ISO C89 compiler (GCC or Clang recommended). No C99 language
-  features are required, however `<stdint.h>` must be available and
-  must define `uint64_t`. `char` must be 8 bits and arithmetic must be
-  two's complement.
-* [CMake](https://cmake.org) >= 3.1
-* [OpenSSL](https://openssl.org) >=1.0.1 (libcrypto only). A recent
-  release from the 1.0.2 branch or later is strongly recommended since
-  1.0.1 was EOL'ed at the end of 2016. Furthermore, OpenSSL versions prior
-  to 1.0.1n and 1.0.2b have known bugs which impact `libaes_siv` and
-  will cause failures in its test suite. LibreSSL is not supported.
-* [Asciidoc](http://asciidoc.org) (only required for building man pages)
+*   Any ISO C89 compiler (GCC or Clang recommended). No C99 language
+    features are required, however `<stdint.h>` must be available and
+    must define `uint64_t`. `char` must be 8 bits and arithmetic must be
+    two's complement.
+
+*   [CMake](https://cmake.org) >= 3.1
+
+*   [OpenSSL](https://openssl.org) >=1.0.1 (libcrypto only). A recent
+    release from the 1.0.2 branch or later is strongly recommended since
+    1.0.1 was EOL'ed at the end of 2016. Furthermore, OpenSSL versions prior
+    to 1.0.1n and 1.0.2b have known bugs which impact `libaes_siv` and
+    will cause failures in its test suite. LibreSSL is not supported.
+
+*   [Asciidoc](http://asciidoc.org) (only required for building man pages)
 
 Running benchmarks requires a POSIX.1-2001 compliant OS, including
 the `clock_gettime` system call.
 
 To build and install on POSIX-like platforms:
-```
+```terminal
     cmake . &&
     make &&
     make test &&
@@ -91,7 +94,7 @@ If you want to build on an OS X machine, install the Xcode development
 environment and the command line tools, then use either the Homebrew package
 manager or the MacPorts package manager to install cmake and OpenSSL.
 
-Homebrew (https://brew.sh/):
+Homebrew <https://brew.sh/>:
 ```
     brew install cmake openssl &&
     cmake -DCMAKE_PREFIX_PATH=/usr/local/opt/openssl . &&
@@ -99,7 +102,7 @@ Homebrew (https://brew.sh/):
     make test &&
     sudo make install
 ```
-MacPorts (https://www.macports.org/):
+MacPorts <https://www.macports.org/>:
 ```
     sudo port install cmake openssl &&
     cmake . &&

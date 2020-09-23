@@ -1,0 +1,3290 @@
+diff --git a/devel/python_paths.py b/devel/python_paths.py
+index 785375293..19e02b9b5 100755
+--- a/devel/python_paths.py
++++ b/devel/python_paths.py
+@@ -41,6 +41,7 @@ PYTHON_PREFIX_NAMES = 'sys-prefix std-prefix exec-prefix'.split()
+ 
+ 
+ class BadReturn(Exception):
++
+     """Bad return from subprocess."""
+     pass
+ 
+diff --git a/libaes_siv/README.md b/libaes_siv/README.md
+index f685acb9c..194638ddc 100644
+--- a/libaes_siv/README.md
++++ b/libaes_siv/README.md
+@@ -33,14 +33,14 @@ scheme](https://en.wikipedia.org/wiki/Deterministic_encryption).
+ Here are a couple common situations where AES-SIV may be an
+ appropriate choice of AEAD scheme:
+ 
+-1. You can't count on the system doing the encrypting to reliably
+-   generate a unique nonce for every message. For example, the system
+-   may be an embedded device with no good entropy source, or may be a
+-   VM subject to be snapshotted and restored.
++1.  You can't count on the system doing the encrypting to reliably
++    generate a unique nonce for every message. For example, the system
++    may be an embedded device with no good entropy source, or may be a
++    VM subject to be snapshotted and restored.
+ 
+-2. You want your encryption to be deterministic so that an
+-   intermediating party such as a caching proxy, provided only with
+-   ciphertext, can perform deduplication.
++2.  You want your encryption to be deterministic so that an
++    intermediating party such as a caching proxy, provided only with
++    ciphertext, can perform deduplication.
+ 
+ The drawback to SIV mode is that it requires two passes over its
+ input. This makes it potentially clumsy for use with large messages
+@@ -61,23 +61,26 @@ and keys for AES-256-SIV are 512 bits long.
+ 
+ Build dependencies:
+ 
+-* Any ISO C89 compiler (GCC or Clang recommended). No C99 language
+-  features are required, however `<stdint.h>` must be available and
+-  must define `uint64_t`. `char` must be 8 bits and arithmetic must be
+-  two's complement.
+-* [CMake](https://cmake.org) >= 3.1
+-* [OpenSSL](https://openssl.org) >=1.0.1 (libcrypto only). A recent
+-  release from the 1.0.2 branch or later is strongly recommended since
+-  1.0.1 was EOL'ed at the end of 2016. Furthermore, OpenSSL versions prior
+-  to 1.0.1n and 1.0.2b have known bugs which impact `libaes_siv` and
+-  will cause failures in its test suite. LibreSSL is not supported.
+-* [Asciidoc](http://asciidoc.org) (only required for building man pages)
++*   Any ISO C89 compiler (GCC or Clang recommended). No C99 language
++    features are required, however `<stdint.h>` must be available and
++    must define `uint64_t`. `char` must be 8 bits and arithmetic must be
++    two's complement.
++
++*   [CMake](https://cmake.org) >= 3.1
++
++*   [OpenSSL](https://openssl.org) >=1.0.1 (libcrypto only). A recent
++    release from the 1.0.2 branch or later is strongly recommended since
++    1.0.1 was EOL'ed at the end of 2016. Furthermore, OpenSSL versions prior
++    to 1.0.1n and 1.0.2b have known bugs which impact `libaes_siv` and
++    will cause failures in its test suite. LibreSSL is not supported.
++
++*   [Asciidoc](http://asciidoc.org) (only required for building man pages)
+ 
+ Running benchmarks requires a POSIX.1-2001 compliant OS, including
+ the `clock_gettime` system call.
+ 
+ To build and install on POSIX-like platforms:
+-```
++```terminal
+     cmake . &&
+     make &&
+     make test &&
+@@ -91,7 +94,7 @@ If you want to build on an OS X machine, install the Xcode development
+ environment and the command line tools, then use either the Homebrew package
+ manager or the MacPorts package manager to install cmake and OpenSSL.
+ 
+-Homebrew (https://brew.sh/):
++Homebrew <https://brew.sh/>:
+ ```
+     brew install cmake openssl &&
+     cmake -DCMAKE_PREFIX_PATH=/usr/local/opt/openssl . &&
+@@ -99,7 +102,7 @@ Homebrew (https://brew.sh/):
+     make test &&
+     sudo make install
+ ```
+-MacPorts (https://www.macports.org/):
++MacPorts <https://www.macports.org/>:
+ ```
+     sudo port install cmake openssl &&
+     cmake . &&
+diff --git a/libjsmn/README.md b/libjsmn/README.md
+index f8249f3dd..a9d13f1d3 100644
+--- a/libjsmn/README.md
++++ b/libjsmn/README.md
+@@ -32,15 +32,15 @@ other projects.
+ Features
+ --------
+ 
+-* compatible with C89
+-* no dependencies (even libc!)
+-* highly portable (tested on x86/amd64, ARM, AVR)
+-* about 200 lines of code
+-* extremely small code footprint
+-* API contains only 2 functions
+-* no dynamic memory allocation
+-* incremental single-pass parsing
+-* library code is covered with unit-tests
++*   compatible with C89
++*   no dependencies (even libc!)
++*   highly portable (tested on x86/amd64, ARM, AVR)
++*   about 200 lines of code
++*   extremely small code footprint
++*   API contains only 2 functions
++*   no dynamic memory allocation
++*   incremental single-pass parsing
++*   library code is covered with unit-tests
+ 
+ Design
+ ------
+@@ -51,9 +51,9 @@ The rudimentary jsmn object is a **token**. Let's consider a JSON string:
+ 
+ It holds the following tokens:
+ 
+-* Object: `{ "name" : "Jack", "age" : 27}` (the whole object)
+-* Strings: `"name"`, `"Jack"`, `"age"` (keys and some values)
+-* Number: `27`
++*   Object: `{ "name" : "Jack", "age" : 27}` (the whole object)
++*   Strings: `"name"`, `"Jack"`, `"age"` (keys and some values)
++*   Number: `27`
+ 
+ In jsmn, tokens do not hold any data, but point to token boundaries in JSON
+ string instead. In the example above jsmn will create tokens like: Object
+@@ -62,12 +62,14 @@ string instead. In the example above jsmn will create tokens like: Object
+ Every jsmn token has a type, which indicates the type of corresponding JSON
+ token. jsmn supports the following token types:
+ 
+-* Object - a container of key-value pairs, e.g.:
++*   Object - a container of key-value pairs, e.g.:
+ 	`{ "foo":"bar", "x":0.3 }`
+-* Array - a sequence of values, e.g.:
++
++*   Array - a sequence of values, e.g.:
+ 	`[ 1, 2, 3 ]`
+-* String - a quoted sequence of chars, e.g.: `"foo"`
+-* Primitive - a number, a boolean (`true`, `false`) or `null`
++
++*   String - a quoted sequence of chars, e.g.: `"foo"`
++*   Primitive - a number, a boolean (`true`, `false`) or `null`
+ 
+ Besides start/end positions, jsmn tokens for complex types (like arrays
+ or objects) also contain a number of child items, so you can easily follow
+@@ -81,15 +83,15 @@ Usage
+ 
+ Download `jsmn.h`, include it, done.
+ 
+-```
+-#include "jsmn.h"
++```c
++    #include "jsmn.h"
+ 
+-...
+-jsmn_parser p;
+-jsmntok_t t[128]; /* We expect no more than 128 JSON tokens */
++    ...
++    jsmn_parser p;
++    jsmntok_t t[128]; /* We expect no more than 128 JSON tokens */
+ 
+-jsmn_init(&p);
+-r = jsmn_parse(&p, s, strlen(s), t, 128);
++    jsmn_init(&p);
++    r = jsmn_parse(&p, s, strlen(s), t, 128);
+ ```
+ 
+ Since jsmn is a single-header, header-only library, for more complex use cases
+@@ -97,13 +99,13 @@ you might need to define additional macros. `#define JSMN_STATIC` hides all
+ jsmn API symbols by making them static. Also, if you want to include `jsmn.h`
+ from multiple C files, to avoid duplication of symbols you may define  `JSMN_HEADER` macro.
+ 
+-```
+-/* In every .c file that uses jsmn include only declarations: */
+-#define JSMN_HEADER
+-#include "jsmn.h"
++```c
++    /* In every .c file that uses jsmn include only declarations: */
++    #define JSMN_HEADER
++    #include "jsmn.h"
+ 
+-/* Additionally, create one jsmn.c file for jsmn implementation: */
+-#include "jsmn.h"
++    /* Additionally, create one jsmn.c file for jsmn implementation: */
++    #include "jsmn.h"
+ ```
+ 
+ API
+@@ -123,9 +125,9 @@ Token types are described by `jsmntype_t`:
+ numbers, booleans and null, because one can easily tell the type using the
+ first character:
+ 
+-* <code>'t', 'f'</code> - boolean 
+-* <code>'n'</code> - null
+-* <code>'-', '0'..'9'</code> - number
++*   <code>'t', 'f'</code> - boolean 
++*   <code>'n'</code> - null
++*   <code>'-', '0'..'9'</code> - number
+ 
+ Token is an object of `jsmntok_t` type:
+ 
+@@ -163,9 +165,9 @@ string. This can be useful if you don't know yet how many tokens to allocate.
+ 
+ If something goes wrong, you will get an error. Error will be one of these:
+ 
+-* `JSMN_ERROR_INVAL` - bad token, JSON string is corrupted
+-* `JSMN_ERROR_NOMEM` - not enough tokens, JSON string is too large
+-* `JSMN_ERROR_PART` - JSON string is too short, expecting more JSON data
++*   `JSMN_ERROR_INVAL` - bad token, JSON string is corrupted
++*   `JSMN_ERROR_NOMEM` - not enough tokens, JSON string is too large
++*   `JSMN_ERROR_PART` - JSON string is too short, expecting more JSON data
+ 
+ If you get `JSMN_ERROR_NOMEM`, you can re-allocate more tokens and call
+ `jsmn_parse` once more.  If you read json data from the stream, you can
+diff --git a/ntpclients/ntpdig.py b/ntpclients/ntpdig.py
+index ed57f92f9..791205b4c 100644
+--- a/ntpclients/ntpdig.py
++++ b/ntpclients/ntpdig.py
+@@ -78,7 +78,7 @@ def read_append(s, packets, packet, sockaddr):
+ 
+ 
+ def queryhost(server, concurrent, timeout=5, port=123):
+-    "Query IP addresses associated with a specified host."
++    """Query IP addresses associated with a specified host."""
+     try:
+         iptuples = socket.getaddrinfo(server, port,
+                                       af, socket.SOCK_DGRAM,
+@@ -138,7 +138,7 @@ def queryhost(server, concurrent, timeout=5, port=123):
+ 
+ 
+ def clock_select(packets):
+-    "Select the pick-of-the-litter clock from the samples we've got."
++    """Select the pick-of-the-litter clock from the samples we've got."""
+     # This is a slightly simplified version of the filter ntpdate used
+     NTP_INFIN = 15          # max stratum, infinity a la Bellman-Ford
+ 
+@@ -192,7 +192,7 @@ def clock_select(packets):
+ 
+ 
+ def report(packet, json):
+-    "Report on the SNTP packet selected for display, and its adjustment."
++    """Report on the SNTP packet selected for display, and its adjustment."""
+     say = sys.stdout.write
+ 
+     packet.posixize()
+diff --git a/ntpclients/ntpkeygen.py b/ntpclients/ntpkeygen.py
+index 2df9c7859..3aa344267 100644
+--- a/ntpclients/ntpkeygen.py
++++ b/ntpclients/ntpkeygen.py
+@@ -57,7 +57,7 @@ KEYSIZE = 16    # maximum key size
+ 
+ 
+ def gen_keys(ident, groupname):
+-    "Generate semi-random AES keys for versions of ntpd with CMAC support."
++    """Generate semi-random AES keys for versions of ntpd with CMAC support."""
+     with fheader("AES", ident, groupname) as wp:
+         for i in range(1, NUMKEYS+1):
+             key = gen_key(KEYSIZE, True)
+@@ -74,7 +74,7 @@ def fheader(fileid,     # file name id
+             ulink,      # linkname
+             owner       # owner name
+             ):
+-    "Generate file header and link"
++    """Generate file header and link."""
+     try:
+         filename = "ntpkey_%s_%s.%u" % (fileid, owner, int(time.time()))
+         orig_umask = os.umask(stat.S_IWGRP | stat.S_IRWXO)
+diff --git a/ntpclients/ntploggps.py b/ntpclients/ntploggps.py
+index d7cae280c..0776ad0c3 100644
+--- a/ntpclients/ntploggps.py
++++ b/ntpclients/ntploggps.py
+@@ -46,9 +46,11 @@ except ImportError as e:
+ 
+ 
+ class logfile_header_class(logging.handlers.TimedRotatingFileHandler):
+-    'A class to modify the file logging handler.'
++
++    """A class to modify the file logging handler."""
++
+     def doRollover(self):
+-        'function to add header to new file on rotation.'
++        """Add header to new file on rotation."""
+         if str is bytes:
+             super(logfile_header_class, self).doRollover()
+         else:
+@@ -57,7 +59,7 @@ class logfile_header_class(logging.handlers.TimedRotatingFileHandler):
+ 
+ 
+ def logging_setup():
+-    "Create logging object"
++    """Create logging object."""
+     logFormat = logging.Formatter('%(message)s')
+     # Create logger for gpsd
+     Logger = logging.getLogger()
+@@ -170,7 +172,7 @@ class GpsPoller(threading.Thread):
+ 
+     @property
+     def time(self):
+-        "Return the gpsd time fix"
++        """Return the gpsd time fix."""
+         t = self.gpsd.fix.time
+         if isinstance(t, int):
+             return t
+diff --git a/ntpclients/ntplogtemp.py b/ntpclients/ntplogtemp.py
+index 1eb752c6f..cd53d6995 100644
+--- a/ntpclients/ntplogtemp.py
++++ b/ntpclients/ntplogtemp.py
+@@ -33,9 +33,10 @@ import time
+ 
+ 
+ class logfile_header_class(logging.handlers.TimedRotatingFileHandler):
+-    'A class to modify the file logging handler.'
++
++    """A class to modify the file logging handler."""
+     def doRollover(self):
+-        'function to add header to new file on rotation.'
++        """Add header to new file on rotation."""
+         if str is bytes:
+             super(logfile_header_class, self).doRollover()
+         else:
+@@ -44,11 +45,7 @@ class logfile_header_class(logging.handlers.TimedRotatingFileHandler):
+ 
+ 
+ def run_binary(cmd):
+-    """\
+-Run a binary
+-Return output if good, None if bad
+-"""
+-
++    """Run a binary Return output if good, None if bad."""
+     try:
+         # sadly subprocess.check_output() is not in Python 2.6
+         # so use Popen()
+@@ -72,7 +69,8 @@ Return output if good, None if bad
+ 
+ 
+ class CpuTemp:
+-    "Sensors on the CPU Core"
++
++    """Sensors on the CPU Core."""
+     has_sensors = False
+ 
+     def __init__(self):
+@@ -85,7 +83,7 @@ class CpuTemp:
+         self._pattern = re.compile('^\s+temp\d+_input:\s+([\d\.]+).*$')
+ 
+     def get_data(self):
+-        "Collects the data and return the output as an array"
++        """Collects the data and return the output as an array."""
+         if not self.has_sensors:
+             return None
+ 
+@@ -113,7 +111,8 @@ class CpuTemp:
+ 
+ 
+ class SmartCtl:
+-    "Sensor on the Hard Drive"
++
++    """Sensor on the Hard Drive."""
+     _drives = []
+     has_smartctl = False
+ 
+@@ -129,7 +128,7 @@ class SmartCtl:
+             self._drives = sorted(self._drives)
+ 
+     def get_data(self):
+-        "Collects the data and return the output as an array"
++        """Collects the data and return the output as an array."""
+         if not self.has_smartctl:
+             return None
+ 
+@@ -150,13 +149,13 @@ class SmartCtl:
+ 
+ 
+ class Temper:
+-    """\
+-    Reads 'temper-poll -c' for room temperature data.
++
++    """Reads 'temper-poll -c' for room temperature data.
+ 
+     Before you can use this class you must have a TEMPer USB thermometer
+-    plugged in, and the temper-python package must be installed and configured.
+-    See their documentation for that procedure.
+-"""
++    plugged in, and the temper-python package must be installed and
++    configured. See their documentation for that procedure.
++    """
+     has_temper = False
+ 
+     def __init__(self):
+@@ -166,7 +165,7 @@ class Temper:
+             self.has_temper = True
+ 
+     def get_data(self):
+-        "Collects the data and return the output as an array"
++        """Collects the data and return the output as an array."""
+         if not self.has_temper:
+             return None
+ 
+@@ -194,8 +193,8 @@ class Temper:
+ 
+ 
+ class ZoneTemp:
+-    "Zone sensors"
+ 
++    """Zone sensors."""
+     def __init__(self):
+         base_dir = '/sys/class/thermal/thermal_zone?/'
+         self.zones = []
+@@ -203,7 +202,7 @@ class ZoneTemp:
+             self.zones.append(child)
+ 
+     def get_data(self):
+-        "Collects the data and return the output as an array"
++        """Collects the data and return the output as an array."""
+         _zone = 0
+         _data = []
+         for zone in self.zones:
+@@ -249,7 +248,7 @@ args = parser.parse_args()
+ 
+ 
+ def logging_setup():
+-    "Create logging object"
++    """Create logging object."""
+     logFormat = logging.Formatter('%(message)s')
+     # Create logger for cpuTemp
+     tempLogger = logging.getLogger()
+@@ -275,14 +274,14 @@ def logging_setup():
+ 
+ 
+ def logData(log, data):
+-    "log the data"
++    """Log the data."""
+     if data is not None:
+         for _item in data:
+             log.info(_item)
+ 
+ 
+ def log_data():
+-    "Write all temperature readings to one file"
++    """Write all temperature readings to one file."""
+     # Create objects
+     cpu = CpuTemp()
+     zone = ZoneTemp()
+diff --git a/ntpclients/ntpmon.py b/ntpclients/ntpmon.py
+index 63f4bc562..96d21accd 100644
+--- a/ntpclients/ntpmon.py
++++ b/ntpclients/ntpmon.py
+@@ -2,8 +2,7 @@
+ # -*- coding: utf-8 -*-
+ 
+ # SPDX-License-Identifier: BSD-2-Clause
+-'''\
+-Any keystroke causes a poll and update. Keystroke commands:
++"""Any keystroke causes a poll and update. Keystroke commands:
+ 
+ 'a': Change peer display to apeers mode, showing association IDs.
+ 'd': Toggle detail mode (some peer will be reverse-video highlighted when on).
+@@ -23,7 +22,7 @@ Any keystroke causes a poll and update. Keystroke commands:
+ '+': Increase debugging level.  Output goes to ntpmon.log
+ '-': Decrease debugging level.
+ '?': Display helpscreen.
+-'''
++"""
+ 
+ from __future__ import print_function, division
+ 
+@@ -71,12 +70,12 @@ stdscr = None
+ 
+ 
+ def iso8601(t):
+-    "ISO8601 string from Unix time."
++    """ISO8601 string from Unix time."""
+     return time.strftime("%Y-%m-%dT%H:%M:%S", time.localtime(t))
+ 
+ 
+ def statline(_peerlist, _mrulist, nyquist):
+-    "Generate a status line"
++    """Generate a status line."""
+     # We don't use stdversion here because the presence of a date is confusing
+     leader = sysvars['version'][0]
+     leader = re.sub(r" \([^\)]*\)", "", leader)
+@@ -91,7 +90,7 @@ def statline(_peerlist, _mrulist, nyquist):
+ 
+ 
+ def peer_detail(variables, showunits=False):
+-    "Show the things a peer summary doesn't, cooked slightly differently"
++    """Show the things a peer summary doesn't, cooked slightly differently."""
+     # All of an rv display except refid, reach, delay, offset, jitter.
+     # One of the goals here is to emit field values at fixed positions
+     # on the 2D display, so that changes in the details are easier to spot.
+@@ -160,8 +159,8 @@ filtdisp   = %(filtdisp)s
+ 
+ 
+ class Fatal(Exception):
+-    "Unrecoverable error."
+ 
++    """Unrecoverable error."""
+     def __init__(self, msg):
+         Exception.__init__(self)
+         self.msg = msg
+@@ -172,7 +171,7 @@ class Fatal(Exception):
+ 
+ class OutputContext:
+     def __enter__(self):
+-        "Begin critical region."
++        """Begin critical region."""
+         if sys.version_info[0] < 3 and not disableunicode:
+             # This appears to only be needed under python 2, it is only
+             # activated when we already have UTF-8. Otherwise we drop
+diff --git a/ntpclients/ntpq.py b/ntpclients/ntpq.py
+index 4e06ede1c..6a2ae96e8 100644
+--- a/ntpclients/ntpq.py
++++ b/ntpclients/ntpq.py
+@@ -56,8 +56,8 @@ NTP_FLOAT = 0xa   # Float value
+ 
+ 
+ class Ntpq(cmd.Cmd):
+-    "ntpq command interpreter"
+ 
++    """Ntpq command interpreter."""
+     def __init__(self, session):
+         cmd.Cmd.__init__(self)
+         self.session = session
+@@ -91,7 +91,7 @@ class Ntpq(cmd.Cmd):
+                 for x in dir(self.__class__)]
+ 
+     def emptyline(self):
+-        "Called when an empty line is entered in response to the prompt."
++        """Called when an empty line is entered in response to the prompt."""
+         pass
+ 
+     def precmd(self, line):
+@@ -102,7 +102,8 @@ class Ntpq(cmd.Cmd):
+         return line
+ 
+     def default(self, line):
+-        "Called on an input line when the command prefix is not recognized."
++        """Called on an input line when the command prefix is not
++        recognized."""
+         cmd, arg, line = self.parseline(line)
+         try:
+             dotext = 'do_'+cmd
+@@ -264,7 +265,7 @@ usage: help [ command ]
+             pass
+ 
+     def __assoc_valid(self, line, required=False):
+-        "Process a numeric associd or index."
++        """Process a numeric associd or index."""
+         # FIXME: This does a useless call to __dogetassoc() when associd == 0
+         # No big deal most of the time.  Just a useless packet exchange.
+         if not line:
+@@ -303,7 +304,7 @@ usage: help [ command ]
+                 return associd
+ 
+     def __assoc_range_valid(self, line):
+-        "Try to get a range of assoc IDs."
++        """Try to get a range of assoc IDs."""
+         tokens = line.split()
+         if len(tokens) < 2:
+             return ()
+@@ -316,7 +317,7 @@ usage: help [ command ]
+         return range(lo, hi+1)
+ 
+     def printvars(self, variables, dtype, quiet):
+-        "Dump variables in raw (actually, semi-cooked) mode."
++        """Dump variables in raw (actually, semi-cooked) mode."""
+         if self.rawmode:
+             if not quiet:
+                 self.say("status=0x%04x,\n" % self.session.rstatus)
+@@ -337,7 +338,7 @@ usage: help [ command ]
+         self.say(text)
+ 
+     def __dolist(self, varlist, associd, op, type, quiet=False):
+-        "List variables associated with a specified peer."
++        """List variables associated with a specified peer."""
+         try:
+             variables = self.session.readvar(associd, varlist, op, raw=True)
+         except ntp.packet.ControlException as e:
+@@ -365,7 +366,7 @@ usage: help [ command ]
+     # Unexposed helper tables and functions end here
+ 
+     def do_units(self, _unused):
+-        "toggle unit display"
++        """Toggle unit display."""
+         self.showunits = not self.showunits
+ 
+     def help_units(self):
+@@ -375,12 +376,12 @@ usage: units
+ """)
+ 
+     def do_EOF(self, _unused):
+-        "exit ntpq"
++        """Exit ntpq."""
+         self.say("\n")
+         return True
+ 
+     def do_timeout(self, line):
+-        "set the primary receive time out"
++        """Set the primary receive time out."""
+         if line:
+             try:
+                 self.session.primary_timeout = int(line)
+@@ -395,7 +396,7 @@ usage: timeout [ msec ]
+ """)
+ 
+     def collect_display(self, associd, variables, decodestatus):
+-        "Query and display a collection of variables from the system."
++        """Query and display a collection of variables from the system."""
+         try:
+             queried = self.session.readvar(associd,
+                                            [v[0] for v in variables],
+@@ -480,7 +481,7 @@ usage: timeout [ msec ]
+             self.warn("display interrupted")
+ 
+     def do_delay(self, line):
+-        "set the delay added to encryption time stamps"
++        """Set the delay added to encryption time stamps."""
+         if not line:
+             self.say("delay %d ms\n" % self.auth_delay)
+         else:
+@@ -498,7 +499,7 @@ usage: delay [ msec ]
+ """)
+ 
+     def do_host(self, line):
+-        "specify the host whose NTP server we talk to"
++        """Specify the host whose NTP server we talk to."""
+         if not line:
+             if self.session.havehost():
+                 self.say("current host is %s\n" % self.session.hostname)
+@@ -532,7 +533,7 @@ usage: host [-4|-6] [hostname]
+ """)
+ 
+     def do_poll(self, line):
+-        "poll an NTP server in client mode `n' times"
++        """Poll an NTP server in client mode `n' times."""
+         # And it's not in the C version, so we're off the hook here
+         self.warn("WARNING: poll not implemented yet")
+ 
+@@ -543,7 +544,7 @@ usage: poll [n] [verbose]
+ """)
+ 
+     def do_passwd(self, line):
+-        "specify a password to use for authenticated requests"
++        """Specify a password to use for authenticated requests."""
+         try:
+             self.session.password()
+         except ntp.packet.ControlException as e:
+@@ -558,7 +559,7 @@ usage: passwd []
+ """)
+ 
+     def do_hostnames(self, line):
+-        "specify whether hostnames or net numbers are printed"
++        """Specify whether hostnames or net numbers are printed."""
+         if not line:
+             pass
+         elif line == "yes":
+@@ -588,7 +589,7 @@ usage: hostnames [yes|no|hostname|hostnum]
+ """)
+ 
+     def do_debug(self, line):
+-        "set/change debugging level"
++        """Set/change debugging level."""
+         if not line:
+             pass
+         elif line == "more":
+@@ -607,8 +608,10 @@ usage: hostnames [yes|no|hostname|hostnum]
+         self.say("debug level is %d\n" % self.debug)
+ 
+     def do_logfile(self, line):
+-        """view/change logfile. \"<stderr>\" will log to stderr
+-           instead of a file"""
++        """View/change logfile.
++
++        \"<stderr>\" will log to stderr instead of a file
++        """
+         if not line:
+             self.say(repr(self.logfp.name) + "\n")
+             return
+@@ -631,7 +634,7 @@ usage: debug [no|more|less|n]
+ """)
+ 
+     def do_exit(self, line):
+-        "exit ntpq"
++        """Exit ntpq."""
+         return True
+ 
+     def help_exit(self):
+@@ -648,7 +651,7 @@ usage: quit
+ """)
+ 
+     def do_keyid(self, line):
+-        "set keyid to use for authenticated requests"
++        """Set keyid to use for authenticated requests."""
+         if line:
+             try:
+                 self.session.keyid = int(line)
+@@ -666,7 +669,7 @@ usage: keyid [key#]
+ """)
+ 
+     def do_version(self, line):
+-        "print version number"
++        """Print version number."""
+         self.say(version + "\n")
+ 
+     def help_version(self):
+@@ -676,7 +679,7 @@ usage: version
+ """)
+ 
+     def do_direct(self, line):
+-        "toggle direct mode output"
++        """Roggle direct mode output."""
+         self.directmode = not self.directmode
+         if self.directmode:
+             self.say("Direct mode is on\n")
+@@ -690,7 +693,7 @@ usage: direct
+ """)
+ 
+     def do_raw(self, line):
+-        "do raw mode variable output"
++        """Do raw mode variable output."""
+         self.rawmode = True
+         self.say("Output set to raw\n")
+ 
+@@ -701,7 +704,7 @@ usage: raw
+ """)
+ 
+     def do_cooked(self, line):
+-        "do cooked mode variable output"
++        """Do cooked mode variable output."""
+         self.rawmode = False
+         self.say("Output set to cooked\n")
+ 
+@@ -712,7 +715,7 @@ usage: cooked
+ """)
+ 
+     def do_authenticate(self, line):
+-        "always authenticate requests to this server"
++        """Always authenticate requests to this server."""
+         if not line:
+             pass
+         elif line == "yes":
+@@ -733,7 +736,7 @@ usage: authenticate [yes|no]
+ """)
+ 
+     def do_ntpversion(self, line):
+-        "set the NTP version number to use for requests"
++        """Set the NTP version number to use for requests."""
+         if not line:
+             pass
+         else:
+@@ -757,7 +760,7 @@ usage: ntpversion [version number]
+ """)
+ 
+     def do_keytype(self, line):
+-        "set key type to use for authenticated requests"
++        """Set key type to use for authenticated requests."""
+         if not line:
+             self.say("Keytype: %s\n" % self.session.keytype)
+         elif line.upper() in ['AES', 'AES128CMAC']:
+@@ -775,7 +778,8 @@ usage: keytype [digest-name]
+ """)
+ 
+     def do_associations(self, line):
+-        "print list of association IDs and statuses for the server's peers"
++        """Print list of association IDs and statuses for the server's
++        peers."""
+         if self.__dogetassoc():
+             self.__printassoc(showall=True)
+ 
+@@ -786,7 +790,7 @@ usage: associations
+ """)
+ 
+     def do_passociations(self, line):
+-        "print list of associations returned by last associations command"
++        """Print list of associations returned by last associations command."""
+         self.__printassoc(showall=True)
+ 
+     def help_passociations(self):
+@@ -796,7 +800,7 @@ usage: passociations
+ """)
+ 
+     def do_lassociations(self, line):
+-        "print list of associations including all client information"
++        """Print list of associations including all client information."""
+         if self.__dogetassoc():
+             self.__printassoc(showall=True)
+ 
+@@ -807,9 +811,8 @@ usage: lassociations
+ """)
+ 
+     def do_lpassociations(self, line):
+-        """\
+-print last obtained list of associations, including client information
+-"""
++        """\ print last obtained list of associations, including client
++        information."""
+         self.__printassoc(showall=True)
+ 
+     def help_lpassociations(self):
+@@ -820,7 +823,7 @@ usage: lpassociations
+ """)
+ 
+     def do_addvars(self, line):
+-        "add variables to the variable list or change their values"
++        """Add variables to the variable list or change their values."""
+         if not line:
+             self.warn("usage: addvars name[=value][,...]\n")
+             return
+@@ -839,7 +842,7 @@ usage: addvars name[=value][,...]
+ """)
+ 
+     def do_rmvars(self, line):
+-        "remove variables from the variable list"
++        """Remove variables from the variable list."""
+         if not line:
+             self.warn("usage: rmvars name[,...]\n")
+             return
+@@ -857,7 +860,7 @@ usage: rmvars name[,...]
+ """)
+ 
+     def do_clearvars(self, line):
+-        "remove all variables from the variable list"
++        """Remove all variables from the variable list."""
+         self.uservars.clear()
+ 
+     def help_clearvars(self):
+@@ -867,7 +870,7 @@ usage: clearvars
+ """)
+ 
+     def do_showvars(self, line):
+-        "print variables on the variable list"
++        """Print variables on the variable list."""
+         if not self.uservars:
+             self.say("No variables on list.\n")
+         for (name, value) in self.uservars.items():
+@@ -883,7 +886,7 @@ usage: showvars
+ """)
+ 
+     def do_readlist(self, line):
+-        "read the system or peer variables included in the variable list"
++        """Read the system or peer variables included in the variable list."""
+         associd = self.__assoc_valid(line)
+         if associd >= 0:
+             qtype = ntp.ntpc.TYPE_SYS if associd == 0 else ntp.ntpc.TYPE_PEER
+@@ -897,7 +900,7 @@ usage: readlist [assocID]
+ """)
+ 
+     def do_rl(self, line):
+-        "read the system or peer variables included in the variable list"
++        """Read the system or peer variables included in the variable list."""
+         self.do_readlist(line)
+ 
+     def help_rl(self):
+@@ -907,7 +910,7 @@ usage: rl [assocID]
+ """)
+ 
+     def do_writelist(self, line):
+-        "write the system or peer variables included in the variable list"
++        """Write the system or peer variables included in the variable list."""
+         pass
+ 
+     def help_writelist(self):
+@@ -917,7 +920,7 @@ usage: writelist [ assocID ]
+ """)
+ 
+     def do_readvar(self, line):
+-        "read system or peer variables"
++        """Read system or peer variables."""
+         associd = self.__assoc_valid(line)
+         if associd >= 0:
+             qtype = ntp.ntpc.TYPE_SYS if associd == 0 else ntp.ntpc.TYPE_PEER
+@@ -931,7 +934,7 @@ usage: readvar [assocID] [varname1] [varname2] [varname3]
+ """)
+ 
+     def do_rv(self, line):
+-        "read system or peer variables"
++        """Read system or peer variables."""
+         self.do_readvar(line)
+ 
+     def help_rv(self):
+@@ -941,7 +944,7 @@ usage: rv [assocID] [varname1] [varname2] [varname3]
+ """)
+ 
+     def do_writevar(self, line):
+-        "write system or peer variables"
++        """Write system or peer variables."""
+         pass
+ 
+     def help_writevar(self):
+@@ -951,7 +954,7 @@ usage: writevar assocID name=value,[...]
+ """)
+ 
+     def do_mreadlist(self, line):
+-        "read the peer variables in the variable list for multiple peers"
++        """Read the peer variables in the variable list for multiple peers."""
+         if not line:
+             self.warn("usage: mreadlist assocIDlow assocIDhigh\n")
+             return
+@@ -973,7 +976,7 @@ usage: mreadlist assocIDlow assocIDhigh
+ """)
+ 
+     def do_mrl(self, line):
+-        "read the peer variables in the variable list for multiple peers"
++        """Read the peer variables in the variable list for multiple peers."""
+         if not line:
+             self.warn("usage: mrl assocIDlow assocIDhigh")
+             return
+@@ -986,7 +989,7 @@ usage: mrl assocIDlow assocIDhigh
+ """)
+ 
+     def do_mreadvar(self, line):
+-        "read peer variables from multiple peers"
++        """Read peer variables from multiple peers."""
+         if not line:
+             self.warn("usage: mreadvar assocIDlow assocIDhigh  "
+                       "[ name=value[,...] ]")
+@@ -1010,7 +1013,7 @@ usage: mreadvar assocIDlow assocIDhigh [name=value[,...]]
+ """)
+ 
+     def do_mrv(self, line):
+-        "read peer variables from multiple peers"
++        """Read peer variables from multiple peers."""
+         if not line:
+             self.warn(
+                 "usage: mrv assocIDlow assocIDhigh [name=value[,...]]")
+@@ -1024,7 +1027,7 @@ usage: mrv assocIDlow assocIDhigh [name=value[,...]]
+ """)
+ 
+     def do_clocklist(self, line):
+-        "read the clock variables included in the variable list"
++        """Read the clock variables included in the variable list."""
+         assoc = self.__assoc_valid(line)
+         if assoc >= 0:
+             self.__dolist(self.uservars.keys(),
+@@ -1038,7 +1041,7 @@ usage: clocklist [assocID]
+ """)
+ 
+     def do_cl(self, line):
+-        "read the clock variables included in the variable list"
++        """Read the clock variables included in the variable list."""
+         self.do_clocklist(line)
+ 
+     def help_cl(self):
+@@ -1048,7 +1051,7 @@ usage: cl [assocID]
+ """)
+ 
+     def do_clockvar(self, line):
+-        "read clock variables"
++        """Read clock variables."""
+         assoc = self.__assoc_valid(line)
+         if assoc == 0:
+             self.warn("This command requires the association ID of a clock.")
+@@ -1063,7 +1066,7 @@ usage: clockvar [assocID] [name=value[,...]]
+ """)
+ 
+     def do_cv(self, line):
+-        "read clock variables"
++        """Read clock variables."""
+         self.do_clockvar(line)
+ 
+     def help_cv(self):
+@@ -1073,7 +1076,7 @@ usage: cv [ assocID ] [ name=value[,...] ]
+ """)
+ 
+     def do_pstats(self, line):
+-        "show statistics for a peer"
++        """Show statistics for a peer."""
+         pstats = (
+             ("srcadr", "remote host:          ", NTP_ADD),
+             ("dstadr", "local address:        ", NTP_ADD),
+@@ -1105,7 +1108,7 @@ usage: pstats assocID
+ """)
+ 
+     def do_peers(self, line):
+-        "obtain and print a list of the server's peers [IP version]"
++        """Obtain and print a list of the server's peers [IP version]"""
+         self.__dopeers(showall=True, mode="peers")
+ 
+     def help_peers(self):
+@@ -1115,9 +1118,8 @@ usage: peers
+ """)
+ 
+     def do_apeers(self, line):
+-        """
+-obtain and print a list of the server's peers and their assocIDs [IP version]
+-"""
++        """Obtain and print a list of the server's peers and their assocIDs [IP
++        version]"""
+         self.__dopeers(showall=True, mode="apeers")
+ 
+     def help_apeers(self):
+@@ -1128,7 +1130,7 @@ usage: apeers
+ """)
+ 
+     def do_lpeers(self, line):
+-        "obtain and print a list of all peers and clients [IP version]"
++        """Obtain and print a list of all peers and clients [IP version]"""
+         self.__dopeers(showall=True, mode="peers")
+ 
+     def help_lpeers(self):
+@@ -1138,9 +1140,8 @@ usage: lpeers
+ """)
+ 
+     def do_opeers(self, line):
+-        """
+-print peer list the old way, with dstadr shown rather than refid [IP version]
+-"""
++        """Print peer list the old way, with dstadr shown rather than refid [IP
++        version]"""
+         self.__dopeers(showall=True, mode="opeers")
+ 
+     def help_opeers(self):
+@@ -1151,8 +1152,8 @@ usage: opeers
+ """)
+ 
+     def do_lopeers(self, line):
+-        """obtain and print a list of all peers and clients showing
+-        dstadr [IP version]"""
++        """Obtain and print a list of all peers and clients showing dstadr [IP
++        version]"""
+         self.__dopeers(showall=True, mode="opeers")
+ 
+     def help_lopeers(self):
+@@ -1163,7 +1164,7 @@ usage: lopeers
+ """)
+ 
+     def do_hot_config(self, line):
+-        "send a remote configuration command to ntpd"
++        """Send a remote configuration command to ntpd."""
+         try:
+             self.session.password()
+         except ntp.packet.ControlException as e:
+@@ -1198,7 +1199,7 @@ usage: config <configuration command line>
+ """)
+ 
+     def do_config_from_file(self, line):
+-        "configure ntpd using the configuration filename"
++        """Configure ntpd using the configuration filename."""
+         try:
+             with open(line) as rfp:
+                 self.say("%s\n" % self.session.config(rfp.read()))
+@@ -1216,8 +1217,11 @@ usage: config_from_file <configuration filename>
+             self.say(self.formatter.summary(entry) + "\n")
+ 
+     def do_mrulist(self, line):
+-        """display the list of most recently seen source addresses,
+-           tags mincount=... resall=0x... resany=0x..."""
++        """Display the list of most recently seen source addresses, tags
++        mincount=...
++
++        resall=0x... resany=0x...
++        """
+         cmdvars = {}
+         for item in line.split(" "):
+             if not item:
+@@ -1304,7 +1308,7 @@ usage: mrulist [tag=value] [tag=value] [tag=value] [tag=value]
+ """)
+ 
+     def do_ifstats(self, line):
+-        "show statistics for each local address ntpd is using"
++        """Show statistics for each local address ntpd is using."""
+         try:
+             self.session.password()
+             entries = self.session.ifstats()
+@@ -1329,7 +1333,7 @@ usage: ifstats
+ """)
+ 
+     def do_reslist(self, line):
+-        "show ntpd access control list"
++        """Show ntpd access control list."""
+         try:
+             self.session.password()
+             entries = self.session.reslist()
+@@ -1356,7 +1360,7 @@ usage: reslist
+ # FIXME: This table should move to ntpd
+ #          so the answers track when ntpd is updated
+     def do_sysinfo(self, _line):
+-        "display system summary"
++        """Display system summary."""
+         sysinfo = (
+             ("peeradr", "system peer:      ", NTP_ADP),
+             ("peermode", "system peer mode: ", NTP_MODE),
+@@ -1384,7 +1388,7 @@ usage: sysinfo
+ # FIXME: This table should move to ntpd
+ #          so the answers track when ntpd is updated
+     def do_kerninfo(self, _line):
+-        "display kernel loop and PPS statistics"
++        """Display kernel loop and PPS statistics."""
+         kerninfo = (
+             ("koffset", "pll offset:          ", NTP_FLOAT),
+             ("kfreq", "pll frequency:       ", NTP_FLOAT),
+@@ -1414,7 +1418,7 @@ usage: kerninfo
+ # FIXME: This table should move to ntpd
+ #          so the answers track when ntpd is updated
+     def do_sysstats(self, _line):
+-        "display system uptime and packet counts"
++        """Display system uptime and packet counts."""
+         sysstats = (
+             ("ss_uptime", "uptime:               ", NTP_INT),
+             ("ss_reset", "sysstats reset:       ", NTP_INT),
+@@ -1441,7 +1445,7 @@ usage: sysstats
+ # FIXME: This table should move to ntpd
+ #          so the answers track when ntpd is updated
+     def do_monstats(self, _line):
+-        "display monitor (mrulist) counters and limits"
++        """Display monitor (mrulist) counters and limits."""
+         monstats = (
+             ("mru_enabled",     "enabled:              ", NTP_INT),
+             ("mru_hashslots",   "hash slots in use:    ", NTP_INT),
+@@ -1471,7 +1475,7 @@ usage: monstats
+ # FIXME: This table should move to ntpd
+ #          so the answers track when ntpd is updated
+     def do_authinfo(self, _line):
+-        "display symmetric authentication counters"
++        """Display symmetric authentication counters."""
+         authinfo = (
+             ("authreset",          "time since reset:    ", NTP_INT),
+             ("authkeys",           "stored keys:         ", NTP_INT),
+@@ -1502,7 +1506,7 @@ usage: authinfo
+ # FIXME: This table should move to ntpd
+ #          so the answers track when ntpd is updated
+     def do_ntsinfo(self, _line):
+-        "display NTS authentication counters"
++        """Display NTS authentication counters."""
+         ntsinfo = (
+    ("nts_client_send",           "NTS client sends:          ", NTP_INT),
+    ("nts_client_recv_good",      "NTS client recvs good:     ", NTP_INT),
+@@ -1532,7 +1536,7 @@ usage: ntsinfo
+ # FIXME: This table should move to ntpd
+ #          so the answers track when ntpd is updated
+     def do_iostats(self, _line):
+-        "display network input and output counters"
++        """Display network input and output counters."""
+         iostats = (
+             ("iostats_reset", "time since reset:     ", NTP_INT),
+             ("total_rbuf", "receive buffers:      ", NTP_INT),
+@@ -1558,7 +1562,7 @@ usage: iostats
+ # FIXME: This table should move to ntpd
+ #          so the answers track when ntpd is updated
+     def do_timerstats(self, line):
+-        "display interval timer counters"
++        """Display interval timer counters."""
+         timerstats = (
+             ("timerstats_reset", "time since reset:  ", NTP_INT),
+             ("timer_overruns", "timer overruns:    ", NTP_INT),
+diff --git a/ntpclients/ntpviz.py b/ntpclients/ntpviz.py
+index ddc766099..4b69e51bd 100644
+--- a/ntpclients/ntpviz.py
++++ b/ntpclients/ntpviz.py
+@@ -69,7 +69,7 @@ if sys.version_info[0] == 2:
+     sys.setdefaultencoding('utf8')
+ 
+     def open(file, mode='r', buffering=-1, encoding=None, errors=None):
+-        "Redefine open()"
++        """Redefine open()"""
+         return(codecs.open(filename=file, mode=mode, encoding=encoding,
+                errors=errors, buffering=buffering))
+ 
+@@ -103,8 +103,8 @@ refclock_name = {'127.127.20.0': 'NMEA(0)',
+ # Gack, python before 3.2 has no defined tzinfo for utc...
+ # define our own
+ class UTC(datetime.tzinfo):
+-    """UTC"""
+ 
++    """UTC."""
+     def utcoffset(self, dt):
+         return datetime.timedelta(0)
+ 
+@@ -132,10 +132,10 @@ if (3 > sys.version_info[0]) and (7 > sys.version_info[1]):
+ 
+ # overload ArgumentParser
+ class MyArgumentParser(argparse.ArgumentParser):
+-    "class to parse arguments"
+ 
++    """class to parse arguments."""
+     def convert_arg_line_to_args(self, arg_line):
+-        '''Make options file more tolerant'''
++        """Make options file more tolerant."""
+         # strip out trailing comments
+         arg_line = re.sub('\s+#.*$', '', arg_line)
+ 
+@@ -150,7 +150,7 @@ class MyArgumentParser(argparse.ArgumentParser):
+ 
+ 
+ def print_profile():
+-    """called by atexit() on normal exit to print profile data"""
++    """called by atexit() on normal exit to print profile data."""
+     pr.disable()
+     pr.print_stats('tottime')
+     pr.print_stats('cumtime')
+@@ -164,8 +164,8 @@ def print_profile():
+ #   Mean, Variance, Standard Deviation, Skewness and Kurtosis
+ 
+ class RunningStats(object):
+-    "Calculate mean, variance, sigma, skewness and kurtosis"
+ 
++    """Calculate mean, variance, sigma, skewness and kurtosis."""
+     def __init__(self, values):
+         self.num = len(values)     # number of samples
+         self.mu = 0.0              # simple arithmetic mean
+@@ -202,8 +202,8 @@ class RunningStats(object):
+ 
+ # class for calced values
+ class VizStats(ntp.statfiles.NTPStats):
+-    "Class for calculated values"
+ 
++    """Class for calculated values."""
+     percs = {}          # dictionary of percentages
+     title = ''          # title
+     unit = 's'          # display units: s, ppm, etc.
+@@ -373,7 +373,7 @@ class VizStats(ntp.statfiles.NTPStats):
+ 
+ 
+ def gnuplot_fmt(min_val, max_val):
+-    "return optimal gnuplot format"
++    """return optimal gnuplot format."""
+     span = max_val - min_val
+     if 6 <= span:
+         fmt = '%.0f'
+@@ -392,7 +392,7 @@ def gnuplot_fmt(min_val, max_val):
+ # Investigate.
+ 
+ def gnuplot(template, outfile=None):
+-    "Run a specified gnuplot program."
++    """Run a specified gnuplot program."""
+ 
+     if not template:
+         # silently ignore empty plots
+@@ -444,8 +444,8 @@ def gnuplot(template, outfile=None):
+ 
+ 
+ class NTPViz(ntp.statfiles.NTPStats):
+-    "Class for visualizing statistics from a single server."
+ 
++    """Class for visualizing statistics from a single server."""
+     # Python takes single quotes here. Since no % substitution
+     Common = """\
+ set grid
+@@ -468,7 +468,7 @@ set rmargin 10
+                                         endtime=endtime)
+ 
+     def plot_slice(self, rows, item1, item2=None):
+-        "slice 0,item1, maybe item2, from rows, ready for gnuplot"
++        """slice 0,item1, maybe item2, from rows, ready for gnuplot."""
+         # speed up by only sending gnuplot the data it will actually use
+         # WARNING: this is hot code, only modify if you profile
+         # since we are looping the data, get the values too
+@@ -515,7 +515,7 @@ set rmargin 10
+         return (plot_data, values1)
+ 
+     def local_offset_gnuplot(self):
+-        "Generate gnuplot code graphing local clock loop statistics"
++        """Generate gnuplot code graphing local clock loop statistics."""
+         if not self.loopstats:
+             sys.stderr.write("ntpviz: WARNING: no loopstats to graph\n")
+             return ''
+@@ -578,7 +578,7 @@ file.</p>
+         return ret
+ 
+     def local_freq_temps_plot(self):
+-        "Generate gnuplot code graphing local frequency and temps"
++        """Generate gnuplot code graphing local frequency and temps."""
+         if not self.loopstats:
+             sys.stderr.write("ntpviz: WARNING: no loopstats to graph\n")
+             return ''
+@@ -671,7 +671,7 @@ file, and field 3 from the tempstats log file.</p>
+         return ret
+ 
+     def local_temps_gnuplot(self):
+-        "Generate gnuplot code graphing local temperature statistics"
++        """Generate gnuplot code graphing local temperature statistics."""
+         sitename = self.sitename
+         tempsmap = self.tempssplit()
+         tempslist = list(tempsmap.keys())
+@@ -733,7 +733,7 @@ component of frequency drift.</p>
+         return ret
+ 
+     def local_gps_gnuplot(self):
+-        "Generate gnuplot code graphing local GPS statistics"
++        """Generate gnuplot code graphing local GPS statistics."""
+         sitename = self.sitename
+         gpsmap = self.gpssplit()
+         gpslist = list(gpsmap.keys())
+@@ -816,7 +816,7 @@ impossible.</p>
+         return ret
+ 
+     def local_error_gnuplot(self):
+-        "Plot the local clock frequency error."
++        """Plot the local clock frequency error."""
+         if not self.loopstats:
+             sys.stderr.write("ntpviz: WARNING: no loopstats to graph\n")
+             return ''
+@@ -875,7 +875,7 @@ line at 0ppm.  Expected values of 99%-1% percentiles: 0.4ppm</p>
+         return ret
+ 
+     def loopstats_gnuplot(self, fld, title, legend, freq):
+-        "Generate gnuplot code of a given loopstats field"
++        """Generate gnuplot code of a given loopstats field."""
+         if not self.loopstats:
+             sys.stderr.write("ntpviz: WARNING: no loopstats to graph\n")
+             return ''
+@@ -943,16 +943,16 @@ plot \
+         return ret
+ 
+     def local_offset_jitter_gnuplot(self):
+-        "Generate gnuplot code of local clock loop standard deviation"
++        """Generate gnuplot code of local clock loop standard deviation."""
+         return self.loopstats_gnuplot(4, "Local RMS Time Jitter", "Jitter", 0)
+ 
+     def local_offset_stability_gnuplot(self):
+-        "Generate gnuplot code graphing local clock stability"
++        """Generate gnuplot code graphing local clock stability."""
+         return self.loopstats_gnuplot(5, "Local RMS Frequency Jitter",
+                                       "Stability", 1)
+ 
+     def peerstats_gnuplot(self, peerlist, fld, title, ptype):
+-        "Plot a specified field from peerstats."
++        """Plot a specified field from peerstats."""
+ 
+         peerdict = self.peersplit()
+         if not peerlist:
+@@ -1167,17 +1167,17 @@ plot \
+         return ret
+ 
+     def peer_offsets_gnuplot(self, peerlist=None):
+-        "gnuplot Peer Offsets"
++        """gnuplot Peer Offsets."""
+         return self.peerstats_gnuplot(peerlist, 4, "Server Offset",
+                                       "offset")
+ 
+     def peer_jitters_gnuplot(self, peerlist=None):
+-        "gnuplot Peer Jitters"
++        """gnuplot Peer Jitters."""
+         return self.peerstats_gnuplot(peerlist, 7, "Server Jitter",
+                                       "jitter")
+ 
+     def local_offset_histogram_gnuplot(self):
+-        "Plot a histogram of clock offset values from loopstats."
++        """Plot a histogram of clock offset values from loopstats."""
+         if not self.loopstats:
+             sys.stderr.write("ntpviz: WARNING: no loopstats to graph\n")
+             return ''
+@@ -1286,7 +1286,7 @@ plot \
+ 
+ 
+ def local_offset_multiplot(statlist):
+-    "Plot comparative local offsets for a list of NTPViz objects."
++    """Plot comparative local offsets for a list of NTPViz objects."""
+ 
+     out = {}
+     out['size'] = args.img_size
+diff --git a/pylib/agentx.py b/pylib/agentx.py
+index c8cacc6df..2c6e3ce22 100644
+--- a/pylib/agentx.py
++++ b/pylib/agentx.py
+@@ -106,15 +106,15 @@ class MIBControl:
+ 
+     # These exist instead of just using getOID_core so semantics are clearer
+     def getOID(self, searchoid, returnGenerator=False):
+-        "Get the requested OID"
++        """Get the requested OID."""
+         return self.getOID_core(False, searchoid, returnGenerator)
+ 
+     def getNextOID(self, searchoid, returnGenerator=False):
+-        "Get the next lexicographical OID"
++        """Get the next lexicographical OID."""
+         return self.getOID_core(True, searchoid, returnGenerator)
+ 
+     def getOIDsInRange(self, oidrange, firstOnly=False):
+-        "Get a list of every (optionally the first) OID in a range"
++        """Get a list of every (optionally the first) OID in a range."""
+         oids = []
+         gen = walkMIBTree(self.oidTree, self.mibRoot)
+         # Find the first OID
+@@ -246,7 +246,8 @@ class PacketControl:
+         self.stillConnected = True
+ 
+     def waitForResponse(self, opkt, ignoreSID=False):
+-        "Wait for a response to a specific packet, dropping everything else"
++        """Wait for a response to a specific packet, dropping everything
++        else."""
+         while True:
+             self.packetEater()
+             while self.receivedPackets:
+@@ -263,7 +264,7 @@ class PacketControl:
+             time.sleep(self.spinGap)
+ 
+     def checkResponses(self):
+-        "Check for expected responses that have timed out"
++        """Check for expected responses that have timed out."""
+         currentTime = time.time()
+         for key in list(self.packetLog.keys()):
+             expiration, originalPkt, callback = self.packetLog[key]
+@@ -273,7 +274,8 @@ class PacketControl:
+                 del self.packetLog[key]
+ 
+     def packetEater(self):
+-        "Slurps data from the input buffer and tries to parse packets from it"
++        """Slurps data from the input buffer and tries to parse packets from
++        it."""
+         self.pollSocket()
+         while True:
+             datalen = len(self.receivedData)
+@@ -345,7 +347,7 @@ class PacketControl:
+         self.sendPacket(err, False)
+ 
+     def pollSocket(self):
+-        "Reads all currently available data from the socket, non-blocking"
++        """Reads all currently available data from the socket, non-blocking."""
+         data = b""
+         while True:
+             tmp = select.select([self.socket], [], [], 0)[0]
+diff --git a/pylib/agentx_packet.py b/pylib/agentx_packet.py
+index 1f907d957..a1ebdb780 100644
+--- a/pylib/agentx_packet.py
++++ b/pylib/agentx_packet.py
+@@ -86,7 +86,8 @@ class AgentXPDU:
+         self._hascontext = hascontext
+ 
+     def packetVars(self):
+-        "Assembles a list of class variables that it is desirable to print"
++        """Assembles a list of class variables that it is desirable to
++        print."""
+         pktvars = {}
+         names = dir(self)
+         names.remove("context")
+@@ -730,7 +731,8 @@ class ResponsePDU(AgentXPDU):
+ 
+ 
+ def classifyOID(oid):
+-    "Utility function to allow the user to send a bare tuple for some cases"
++    """Utility function to allow the user to send a bare tuple for some
++    cases."""
+     if isinstance(oid, OID):
+         return oid
+     return OID(oid, False)
+diff --git a/pylib/packet.py b/pylib/packet.py
+index f7c24cacf..926a62072 100644
+--- a/pylib/packet.py
++++ b/pylib/packet.py
+@@ -262,7 +262,8 @@ MAX_BARE_MAC_LENGTH = 20
+ 
+ 
+ class Packet:
+-    "Encapsulate an NTP fragment"
++
++    """Encapsulate an NTP fragment."""
+     # The following two methods are copied from macros in includes/control.h
+     @staticmethod
+     def VN_MODE(v, m):
+@@ -311,7 +312,8 @@ class SyncException(BaseException):  # pragma: no cover
+ 
+ 
+ class SyncPacket(Packet):
+-    "Mode 1-5 time-synchronization packet, including SNTP."
++
++    """Mode 1-5 time-synchronization packet, including SNTP."""
+     format = "!BBBbIIIQQQQ"
+     HEADER_LEN = 48
+     UNIX_EPOCH = 2208988800     # Midnight 1 Jan 1970 in secs since NTP epoch
+@@ -384,19 +386,19 @@ class SyncPacket(Packet):
+ 
+     @staticmethod
+     def ntp_to_posix(t):
+-        "Scale from NTP time to POSIX time"
++        """Scale from NTP time to POSIX time."""
+         # Note: assumes we're in the same NTP era as the transmitter...
+         return (t / (2**32)) - SyncPacket.UNIX_EPOCH
+ 
+     @staticmethod
+     def posix_to_ntp(t):
+-        "Scale from POSIX time to NTP time"
++        """Scale from POSIX time to NTP time."""
+         # Note: assumes we're in the same NTP era as the transmitter...
+         # This receives floats, can't use shifts
+         return int((t + SyncPacket.UNIX_EPOCH) * 2**32)
+ 
+     def posixize(self):
+-        "Rescale all timestamps to POSIX time."
++        """Rescale all timestamps to POSIX time."""
+         if not self.rescaled:
+             self.rescaled = True
+             self.root_delay >>= 16
+@@ -424,16 +426,16 @@ class SyncPacket(Packet):
+         return self.received
+ 
+     def delta(self):
+-        "Packet flight time"
++        """Packet flight time."""
+         return (self.t4() - self.t1()) - (self.t3() - self.t2())
+ 
+     def epsilon(self):
+-        "Residual error due to clock imprecision."
++        """Residual error due to clock imprecision."""
+         # FIXME: Include client imprecision.
+         return SyncPacket.PHI * (self.t4() - self.t1()) + 2**self.precision
+ 
+     def synchd(self):
+-        "Synchronization distance, estimates worst-case error in seconds"
++        """Synchronization distance, estimates worst-case error in seconds."""
+         # This is "lambda" in NTP-speak, but that's a Python keyword
+         return abs(self.delta()/2 + self.epsilon())
+ 
+@@ -442,7 +444,7 @@ class SyncPacket(Packet):
+         return ((self.t2()-self.t1())+(self.t3()-self.t4()))/2
+ 
+     def flatten(self):
+-        "Flatten the packet into an octet sequence."
++        """Flatten the packet into an octet sequence."""
+         body = struct.pack(SyncPacket.format,
+                            self.li_vn_mode,
+                            self.stratum,
+@@ -458,18 +460,18 @@ class SyncPacket(Packet):
+         return body + self.extension
+ 
+     def refid_octets(self):
+-        "Analyze refid into octets."
++        """Analyze refid into octets."""
+         return ((self.refid >> 24) & 0xff,
+                 (self.refid >> 16) & 0xff,
+                 (self.refid >> 8) & 0xff,
+                 self.refid & 0xff)
+ 
+     def refid_as_string(self):
+-        "Sometimes it's a clock name or KOD type"
++        """Sometimes it's a clock name or KOD type."""
+         return ntp.poly.polystr(struct.pack(*(("BBBB",) + self.refid_octets())))
+ 
+     def refid_as_address(self):
+-        "Sometimes it's an IPV4 address."
++        """Sometimes it's an IPV4 address."""
+         return ntp.poly.polystr("%d.%d.%d.%d" % self.refid_octets())
+ 
+     def is_crypto_nak(self):
+@@ -482,7 +484,7 @@ class SyncPacket(Packet):
+         return len(self.mac) == 24
+ 
+     def __repr__(self):
+-        "Represent a posixized sync packet in an eyeball-friendly format."
++        """Represent a posixized sync packet in an eyeball-friendly format."""
+         r = "<NTP:%s:%d:%d:" % (self.leap(), self.version(), self.mode())
+         r += "%f:%f" % (self.root_delay, self.root_dispersion)
+         rs = self.refid_as_string()
+@@ -506,7 +508,8 @@ class SyncPacket(Packet):
+ 
+ 
+ class ControlPacket(Packet):
+-    "Mode 6 request/response."
++
++    """Mode 6 request/response."""
+ 
+     def __init__(self, session, opcode=0, associd=0, qdata=''):
+         Packet.__init__(self, mode=ntp.magic.MODE_CONTROL,
+@@ -541,7 +544,7 @@ class ControlPacket(Packet):
+         return self.count + self.offset
+ 
+     def stats(self):
+-        "Return statistics on a fragment."
++        """Return statistics on a fragment."""
+         return "%5d %5d\t%3d octets\n" % (self.offset, self.end(), self.count)
+ 
+     def analyze(self, rawdata):
+@@ -558,7 +561,7 @@ class ControlPacket(Packet):
+         return (self.sequence, self.status, self.associd, self.offset)
+ 
+     def flatten(self):
+-        "Flatten the packet into an octet sequence."
++        """Flatten the packet into an octet sequence."""
+         body = struct.pack(ControlPacket.format,
+                            self.li_vn_mode,
+                            self.r_e_m_op,
+@@ -574,7 +577,8 @@ class ControlPacket(Packet):
+ 
+ 
+ class Peer:
+-    "The information we have about an NTP peer."
++
++    """The information we have about an NTP peer."""
+ 
+     def __init__(self, session, associd, status):
+         self.session = session
+@@ -618,7 +622,7 @@ SERR_NOTRUST = "***No trusted keys have been declared"
+ 
+ 
+ def dump_hex_printable(xdata, outfp=sys.stdout):
+-    "Dump a packet in hex, in a familiar hex format"
++    """Dump a packet in hex, in a familiar hex format."""
+     rowsize = 16
+     while xdata:
+         # Slice one row off of our data
+@@ -638,7 +642,8 @@ def dump_hex_printable(xdata, outfp=sys.stdout):
+ 
+ 
+ class MRUEntry:
+-    "A traffic entry for an MRU list."
++
++    """A traffic entry for an MRU list."""
+ 
+     def __init__(self):
+         self.addr = None        # text of IPv4 or IPv6 address and port
+@@ -678,14 +683,16 @@ class MRUEntry:
+ 
+ 
+ class MRUList:
+-    "A sequence of address-timespan pairs returned by ntpd in one response."
++
++    """A sequence of address-timespan pairs returned by ntpd in one
++    response."""
+ 
+     def __init__(self):
+         self.entries = []       # A list of MRUEntry objects
+         self.now = None         # server timestamp marking end of operation
+ 
+     def is_complete(self):
+-        "Is the server done shipping entries for this span?"
++        """Is the server done shipping entries for this span?"""
+         return self.now is not None
+ 
+     def __repr__(self):
+@@ -703,7 +710,8 @@ class ControlException(BaseException):
+ 
+ 
+ class ControlSession:
+-    "A session to a host"
++
++    """A session to a host."""
+     MRU_ROW_LIMIT = 256
+     _authpass = True
+     server_errors = {
+@@ -750,11 +758,11 @@ class ControlSession:
+             self.sock = None
+ 
+     def havehost(self):
+-        "Is the session connected to a host?"
++        """Is the session connected to a host?"""
+         return self.sock is not None
+ 
+     def __lookuphost(self, hname, fam):
+-        "Try different ways to interpret an address and family"
++        """Try different ways to interpret an address and family."""
+         if hname.startswith("["):
+             hname = hname[1:-1]
+         # First try to resolve it as an ip address and if that fails,
+@@ -838,7 +846,7 @@ class ControlSession:
+         return True
+ 
+     def password(self):
+-        "Get a keyid and the password if we don't have one."
++        """Get a keyid and the password if we don't have one."""
+         if self.keyid is None:
+             if self.auth is None:
+                 try:
+@@ -879,7 +887,7 @@ class ControlSession:
+             self.passwd = passwd
+ 
+     def sendpkt(self, xdata):
+-        "Send a packet to the host."
++        """Send a packet to the host."""
+         while len(xdata) % 4:
+             xdata += b"\x00"
+         ntp.util.dolog(self.logfp,
+@@ -899,7 +907,7 @@ class ControlSession:
+         return 0
+ 
+     def sendrequest(self, opcode, associd, qdata, auth=False):
+-        "Ship an ntpq request packet to a server."
++        """Ship an ntpq request packet to a server."""
+         if (self.debug >= 1) and (self.logfp is not None):
+             # special, not replacing with dolog()
+             if self.debug >= 3:
+@@ -952,7 +960,7 @@ class ControlSession:
+         return pkt.send()
+ 
+     def getresponse(self, opcode, associd, timeo):
+-        "Get a response expected to match a given opcode and associd."
++        """Get a response expected to match a given opcode and associd."""
+         # This is pretty tricky.  We may get between 1 and MAXFRAG packets
+         # back in response to the request.  We peel the data out of
+         # each packet and collect it in one long block.  When the last
+@@ -1194,7 +1202,7 @@ class ControlSession:
+         return True
+ 
+     def doquery(self, opcode, associd=0, qdata="", auth=False):
+-        "send a request and save the response"
++        """Send a request and save the response."""
+         if not self.havehost():
+             raise ControlException(SERR_NOHOST)
+         retry = True
+@@ -1215,7 +1223,7 @@ class ControlSession:
+         return res
+ 
+     def readstat(self, associd=0):
+-        "Read peer status, or throw an exception."
++        """Read peer status, or throw an exception."""
+         self.doquery(opcode=ntp.control.CTL_OP_READSTAT, associd=associd)
+         if len(self.response) % 4:
+             raise ControlException(SERR_BADLENGTH)
+@@ -1229,7 +1237,7 @@ class ControlSession:
+         return idlist
+ 
+     def __parse_varlist(self, raw=False):
+-        "Parse a response as a textual varlist."
++        """Parse a response as a textual varlist."""
+         # Strip out NULs and binary garbage from text;
+         # ntpd seems prone to generate these, especially
+         # in reslist responses.
+@@ -1283,7 +1291,7 @@ class ControlSession:
+ 
+     def readvar(self, associd=0, varlist=None,
+                 opcode=ntp.control.CTL_OP_READVAR, raw=False):
+-        "Read system vars from the host as a dict, or throw an exception."
++        """Read system vars from the host as a dict, or throw an exception."""
+         if varlist is None:
+             qdata = ""
+         else:
+@@ -1292,7 +1300,10 @@ class ControlSession:
+         return self.__parse_varlist(raw)
+ 
+     def config(self, configtext):
+-        "Send configuration text to the daemon. Return True if accepted."
++        """Send configuration text to the daemon.
++
++        Return True if accepted.
++        """
+         self.doquery(opcode=ntp.control.CTL_OP_CONFIGURE,
+                      qdata=configtext, auth=True)
+         # Copes with an implementation error - ntpd uses putdata without
+@@ -1305,10 +1316,10 @@ class ControlSession:
+         return self.response == ntp.poly.polybytes("Config Succeeded")
+ 
+     def fetch_nonce(self):
++        """Ask for, and get, a nonce that can be replayed.
++
++        This combats source address spoofing
+         """
+-Ask for, and get, a nonce that can be replayed.
+-This combats source address spoofing
+-"""
+         for i in range(4):
+             # retry 4 times
+             self.doquery(opcode=ntp.control.CTL_OP_REQ_NONCE)
+@@ -1327,7 +1338,7 @@ This combats source address spoofing
+         raise ControlException(SERR_BADNONCE)
+ 
+     def __mru_analyze(self, variables, span, direct):
+-        """Extracts data from the key/value list into a more useful form"""
++        """Extracts data from the key/value list into a more useful form."""
+         mru = None
+         nonce = None
+         items = list(variables.items())
+@@ -1417,7 +1428,7 @@ This combats source address spoofing
+         return restarted_count, cap_frags, limit, frags
+ 
+     def mrulist(self, variables=None, rawhook=None, direct=None):
+-        "Retrieve MRU list data"
++        """Retrieve MRU list data."""
+         restarted_count = 0
+         cap_frags = True
+         sorter = None
+@@ -1523,7 +1534,7 @@ This combats source address spoofing
+         return span
+ 
+     def __ordlist(self, listtype):
+-        "Retrieve ordered-list data."
++        """Retrieve ordered-list data."""
+         self.doquery(opcode=ntp.control.CTL_OP_READ_ORDLIST_A,
+                      qdata=listtype, auth=True)
+         stanzas = []
+@@ -1538,11 +1549,11 @@ This combats source address spoofing
+         return stanzas
+ 
+     def reslist(self):
+-        "Retrieve reslist data."
++        """Retrieve reslist data."""
+         return self.__ordlist("addr_restrictions")
+ 
+     def ifstats(self):
+-        "Retrieve ifstats data."
++        """Retrieve ifstats data."""
+         return self.__ordlist("ifstats")
+ 
+ 
+@@ -1681,7 +1692,8 @@ def mru_kv_key(token):
+ 
+ 
+ class Authenticator:
+-    "MAC authentication manager for NTP packets."
++
++    """MAC authentication manager for NTP packets."""
+ 
+     def __init__(self, keyfile=None):
+         # We allow I/O and permission errors upward deliberately
+@@ -1703,15 +1715,15 @@ class Authenticator:
+                 self.passwords[int(keyid)] = (keytype, passwd)
+ 
+     def __len__(self):
+-        'return the number of keytype/passwd tuples stored'
++        """Return the number of keytype/passwd tuples stored."""
+         return len(self.passwords)
+ 
+     def __getitem__(self, keyid):
+-        'get a keytype/passwd tuple by keyid'
++        """Get a keytype/passwd tuple by keyid."""
+         return self.passwords.get(keyid)
+ 
+     def control(self, keyid=None):
+-        "Get the keytype/passwd tuple that controls localhost and its id"
++        """Get the keytype/passwd tuple that controls localhost and its id."""
+         if keyid is not None:
+             if keyid in self.passwords:
+                 return (keyid,) + self.passwords[keyid]
+@@ -1732,7 +1744,7 @@ class Authenticator:
+ 
+     @staticmethod
+     def compute_mac(payload, keyid, keytype, passwd):
+-        'Create the authentication payload to send'
++        """Create the authentication payload to send."""
+         if not ntp.ntpc.checkname(keytype):
+             return False
+         mac2 = ntp.ntpc.mac(ntp.poly.polybytes(payload),
+@@ -1743,14 +1755,15 @@ class Authenticator:
+ 
+     @staticmethod
+     def have_mac(packet):
+-        "Does this packet have a MAC?"
++        """Does this packet have a MAC?"""
+         # According to RFC 5909 7.5 the MAC is always present when an extension
+         # field is present. Note: this crude test will fail on Mode 6 packets.
+         # On those you have to go in and look at the count.
+         return len(packet) > ntp.magic.LEN_PKT_NOMAC
+ 
+     def verify_mac(self, packet, packet_end=48, mac_begin=48):
+-        "Does the MAC on this packet verify according to credentials we have?"
++        """Does the MAC on this packet verify according to credentials we
++        have?"""
+         payload = packet[:packet_end]
+         keyid = packet[mac_begin:mac_begin+KEYID_LENGTH]
+         mac = packet[mac_begin+KEYID_LENGTH:]
+diff --git a/pylib/poly.py b/pylib/poly.py
+index 9ecb9eea3..fa73a9d1e 100644
+--- a/pylib/poly.py
++++ b/pylib/poly.py
+@@ -2,7 +2,7 @@
+ # SPDX-License-Identifier: BSD-2-Clause
+ """Handle bytes and strings in a polyglot fashion.
+ 
+-copied from ../ntpclient/ntpq.py  which got it from
++This is copied from ../ntpclient/ntpq.py  which got it from
+ https://gitlab.com/esr/practical-python-porting/blob/master/polystr-inclusion.py
+ see http://www.catb.org/esr/faqs/practical-python-porting/ for more information.
+ """
+@@ -34,6 +34,64 @@ master_encoding = 'latin-1'
+ 
+ forced_utf8 = False
+ 
++
++def polystr3(o):
++    """Polymorphic string factory function."""
++    if isinstance(o, str):
++        return o
++    if not isinstance(o, bytes):
++        return str(o)
++    return str(o, encoding=master_encoding)
++
++
++def polybytes3(s):
++    """Polymorphic string encoding function."""
++    if isinstance(s, bytes):
++        return s
++    if not isinstance(s, str):
++        return bytes(s)
++    return bytes(s, encoding=master_encoding)
++
++
++def polyord3(c):
++    """Polymorphic ord() function."""
++    if isinstance(c, str):
++        return ord(c)
++    return c
++
++
++def polychr3(c):
++    """Polymorphic chr() function."""
++    if isinstance(c, int):
++        return chr(c)
++    return c
++
++
++def string_escape3(s):
++    """Polymorphic string_escape/unicode_escape."""
++    # This hack is necessary because Unicode strings in Python 3 don't
++    # have a decode method, so there's no simple way to ask it for the
++    # equivalent of decode('string_escape') in Python 2. This function
++    # assumes that it will be called with a Python 3 'str' instance
++    return s.encode(master_encoding).decode('unicode_escape')
++
++
++def make_std_wrapper3(stream):
++    """Standard input/output wrapper factory function."""
++    # This ensures that the encoding of standard output and standard
++    # error on Python 3 matches the master encoding we use to turn
++    # bytes to Unicode in polystr above
++    # line_buffering=True ensures that interactive command sessions
++    # work as expected
++    return io.TextIOWrapper(stream.buffer, encoding="utf-8",
++                            newline="\n", line_buffering=True)
++
++
++def string_escape2(s):
++    """String_escape/unicode_escape."""
++    return s.decode('string_escape')
++
++
+ if str is bytes:  # Python 2
+     polystr = str
+     polyunicode = unicode
+@@ -41,70 +99,22 @@ if str is bytes:  # Python 2
+     polyord = ord
+     polychr = str
+     polyinput = raw_input
+-
+-    def string_escape(s):
+-        """String_escape/unicode_escape."""
+-        return s.decode('string_escape')
++    string_escape = string_escape2
+ 
+ else:  # Python 3
+     import io
+ 
++    polystr = polystr3
++    polybytes = polybytes3
++    polyord = polyord3
++    polychr = polychr3
+     polyinput = input
+-
+-    def polystr(o):
+-        """Polymorphic string factory function."""
+-        if isinstance(o, str):
+-            return o
+-        if not isinstance(o, bytes):
+-            return str(o)
+-        return str(o, encoding=master_encoding)
+-
+-    polyunicode = polystr
+-
+-    def polybytes(s):
+-        """Polymorphic string encoding function."""
+-        if isinstance(s, bytes):
+-            return s
+-        if not isinstance(s, str):
+-            return bytes(s)
+-        return bytes(s, encoding=master_encoding)
+-
+-    def polyord(c):
+-        "Polymorphic ord() function"
+-        if isinstance(c, str):
+-            return ord(c)
+-        else:
+-            return c
+-
+-    def polychr(c):
+-        "Polymorphic chr() function"
+-        if isinstance(c, int):
+-            return chr(c)
+-        else:
+-            return c
+-
+-    def string_escape(s):
+-        """Polymorphic string_escape/unicode_escape."""
+-        # This hack is necessary because Unicode strings in Python 3 don't
+-        # have a decode method, so there's no simple way to ask it for the
+-        # equivalent of decode('string_escape') in Python 2. This function
+-        # assumes that it will be called with a Python 3 'str' instance
+-        return s.encode(master_encoding).decode('unicode_escape')
+-
+-    def make_std_wrapper(stream):
+-        """Standard input/output wrapper factory function."""
+-        # This ensures that the encoding of standard output and standard
+-        # error on Python 3 matches the master encoding we use to turn
+-        # bytes to Unicode in polystr above
+-        # line_buffering=True ensures that interactive command sessions
+-        # work as expected
+-        return io.TextIOWrapper(stream.buffer, encoding="utf-8",
+-                                newline="\n", line_buffering=True)
++    polyunicode = polystr3
+ 
+     # This is the one situation where we *can* force unicode.
+     if "utf-8" != sys.stdout.encoding.lower():
+         forced_utf8 = True
+-        sys.stdout = make_std_wrapper(sys.stdout)
++        sys.stdout = make_std_wrapper3(sys.stdout)
+     if "utf-8" != sys.stderr.encoding.lower():
+         forced_utf8 = True
+-        sys.stderr = make_std_wrapper(sys.stderr)
++        sys.stderr = make_std_wrapper3(sys.stderr)
+diff --git a/pylib/statfiles.py b/pylib/statfiles.py
+index 37c7ece42..16ea11a92 100644
+--- a/pylib/statfiles.py
++++ b/pylib/statfiles.py
+@@ -19,7 +19,8 @@ import time
+ 
+ 
+ class NTPStats:
+-    "Gather statistics for a specified NTP site"
++
++    """Gather statistics for a specified NTP site."""
+     SecondsInDay = 24*60*60
+     DefaultPeriod = 7*24*60*60  # default 7 days, 604800 secs
+     peermap = {}    # cached result of peersplit()
+@@ -31,8 +32,10 @@ class NTPStats:
+     @staticmethod
+     def unixize(lines, starttime, endtime):
+         """Extract first two fields, MJD and seconds past midnight.
++
+         convert timestamp (MJD & seconds past midnight) to Unix time
+-        Replace MJD+second with Unix time."""
++        Replace MJD+second with Unix time.
++        """
+         # HOT LOOP!  Do not change w/o profiling before and after
+         lines1 = []
+         for line in lines:
+@@ -56,13 +59,15 @@ class NTPStats:
+ 
+     @staticmethod
+     def timestamp(line):
+-        "get Unix time from converted line."
++        """Get Unix time from converted line."""
+         return float(line.split()[0])
+ 
+     @staticmethod
+     def percentiles(percents, values):
+         """Return given percentiles of a given row in a given set of entries.
+-        assuming values are already split and sorted"""
++
++        assuming values are already split and sorted
++        """
+         ret = {}
+         length = len(values)
+         if 1 >= length:
+@@ -85,7 +90,7 @@ class NTPStats:
+ 
+     @staticmethod
+     def ip_label(key):
+-        "Produce appropriate label for an IP address."
++        """Produce appropriate label for an IP address."""
+         # If it's a new-style NTPsep clock label, pass it through,
+         # Otherwise we expect it to be an IP address and the next guard fires
+         if key[0].isdigit():
+@@ -108,7 +113,7 @@ class NTPStats:
+ 
+     def __init__(self, statsdir, sitename=None,
+                  period=None, starttime=None, endtime=None):
+-        "Grab content of logfiles, sorted by timestamp."
++        """Grab content of logfiles, sorted by timestamp."""
+         if period is None:
+             period = NTPStats.DefaultPeriod
+         self.period = period
+@@ -201,7 +206,9 @@ class NTPStats:
+ 
+     def peersplit(self):
+         """Return a dictionary mapping peerstats IPs to entry subsets.
+-        This is very expensive, so cache the result"""
++
++        This is very expensive, so cache the result
++        """
+         if self.peermap:
+             return self.peermap
+ 
+@@ -217,7 +224,7 @@ class NTPStats:
+         return self.peermap
+ 
+     def gpssplit(self):
+-        "Return a dictionary mapping gps sources to entry subsets."
++        """Return a dictionary mapping gps sources to entry subsets."""
+         gpsmap = {}
+         for row in self.gpsd:
+             try:
+@@ -231,7 +238,7 @@ class NTPStats:
+         return gpsmap
+ 
+     def tempssplit(self):
+-        "Return a dictionary mapping temperature sources to entry subsets."
++        """Return a dictionary mapping temperature sources to entry subsets."""
+         tempsmap = {}
+         for row in self.temps:
+             try:
+@@ -246,7 +253,10 @@ class NTPStats:
+ 
+ 
+ def iso_to_posix(time_string):
+-    "Accept timestamps in ISO 8661 format or numeric POSIX time. UTC only."
++    """Accept timestamps in ISO 8661 format or numeric POSIX time.
++
++    UTC only.
++    """
+     if str(time_string).isdigit():
+         return int(time_string)
+     time_struct = time.strptime(time_string, "%Y-%m-%dT%H:%M:%S")
+@@ -255,7 +265,7 @@ def iso_to_posix(time_string):
+ 
+ 
+ def posix_to_iso(unix_time):
+-    "ISO 8601 string in UTC from Unix time."
++    """ISO 8601 string in UTC from Unix time."""
+     return time.strftime("%Y-%m-%dT%H:%M:%S", time.gmtime(unix_time))
+ 
+ # end
+diff --git a/pylib/util.py b/pylib/util.py
+index a495514d5..cfcbcd0bb 100644
+--- a/pylib/util.py
++++ b/pylib/util.py
+@@ -1,10 +1,11 @@
+ # -*- coding: utf-8 -*-
+-"Common utility functions"
++"""Common utility functions."""
+ # SPDX-License-Identifier: BSD-2-Clause
+ 
+ from __future__ import print_function, division
+ 
+ 
++import ast
+ import collections
+ import os
+ import re
+@@ -59,6 +60,7 @@ def check_unicode():  # pragma: no cover
+ 
+ def deunicode_units():  # pragma: no cover
+     """Under certain conditions it is not possible to force unicode output,
++
+     this overwrites units that contain unicode with safe versions"""
+     global UNIT_US
+     global UNIT_PPK
+@@ -85,6 +87,7 @@ PPM_VARS = ("frequency", "clk_wander")
+ 
+ def dolog(logfp, text, debug, threshold):
+     """debug is the current debug value
++
+     threshold is the trigger for the current log"""
+     if logfp is None:
+         return  # can turn off logging by supplying a None file descriptor
+@@ -96,8 +99,10 @@ def dolog(logfp, text, debug, threshold):
+ 
+ def safeargcast(arg, castfunc, errtext, usage):
+     """Attempts to typecast an argument, prints and dies on failure.
++
+     errtext must contain a %s for splicing in the argument, and be
+-    newline terminated."""
++    newline terminated.
++    """
+     try:
+         casted = castfunc(arg)
+     except ValueError:
+@@ -108,12 +113,12 @@ def safeargcast(arg, castfunc, errtext, usage):
+ 
+ 
+ def stdversion():
+-    "Returns the NTPsec version string in a standard format"
++    """Returns the NTPsec version string in a standard format."""
+     return "ntpsec-%s" % "@NTPSEC_VERSION_EXTENDED@"
+ 
+ 
+ def rfc3339(t):
+-    "RFC 3339 string from Unix time, including fractional second."
++    """RFC 3339 string from Unix time, including fractional second."""
+     rep = time.strftime("%Y-%m-%dT%H:%M:%S", time.gmtime(t))
+     t = str(t)
+     if "." in t:
+@@ -141,7 +146,7 @@ def hexstr2octets(hexstr):
+ 
+ 
+ def slicedata(data, slicepoint):
+-    "Breaks a sequence into two pieces at the slice point"
++    """Breaks a sequence into two pieces at the slice point."""
+     return data[:slicepoint], data[slicepoint:]
+ 
+ 
+@@ -199,7 +204,7 @@ def parseConf(text):
+             elif text[i] == "\\":  # Starting an escape sequence
+                 i += 1
+                 if text[i] in "'\"n\\":
+-                    current.append(eval("\'\\" + text[i] + "\'"))
++                    current.append(ast.literal_eval("\'\\" + text[i] + "\'"))
+             else:
+                 current.append(text[i])
+         else:
+@@ -229,7 +234,7 @@ def parseConf(text):
+ 
+ 
+ def stringfilt(data):
+-    "Pretty print string of space separated numbers"
++    """Pretty print string of space separated numbers."""
+     parts = data.split()
+ 
+     cooked = []
+@@ -244,14 +249,15 @@ def stringfilt(data):
+ 
+ 
+ def stringfiltcooker(data):
+-    "Cooks a filt* string of space separated numbers, expects milliseconds"
++    """Cooks a filt* string of space separated numbers, expects
++    milliseconds."""
+     parts = data.split()
+     oomcount = {}
+     minscale = -100000  # Keep track of the maxdownscale for each value
+     # Find out what the 'natural' unit of each value is
+     for part in parts:
+         # Only care about OOMs, the real scaling happens later
+-        value, oom = scalestring(part)
++        oom = scalestring(part)[1]
+         # Track the highest maxdownscale so we do not invent precision
+         ds = maxdownscale(part)
+         minscale = max(ds, minscale)
+@@ -278,14 +284,14 @@ def stringfiltcooker(data):
+ 
+ 
+ def getunitgroup(unit):
+-    "Returns the unit group which contains a given unit"
++    """Returns the unit group which contains a given unit."""
+     for group in unitgroups:
+         if unit in group:
+             return group
+ 
+ 
+ def oomsbetweenunits(a, b):
+-    "Calculates how many orders of magnitude separate two units"
++    """Calculates how many orders of magnitude separate two units."""
+     group = getunitgroup(a)
+     if b is None:  # Caller is asking for the distance from the base unit
+         return group.index(a) * 3
+@@ -297,7 +303,7 @@ def oomsbetweenunits(a, b):
+ 
+ 
+ def breaknumberstring(value):
+-    "Breaks a number string into (aboveDecimal, belowDecimal, isNegative?)"
++    """Breaks a number string into (aboveDecimal, belowDecimal, isNegative?)"""
+     if value[0] == "-":
+         value = value[1:]
+         negative = True
+@@ -312,7 +318,7 @@ def breaknumberstring(value):
+ 
+ 
+ def gluenumberstring(above, below, isnegative):
+-    "Glues together parts of a number string"
++    """Glues together parts of a number string."""
+     if above == "":
+         above = "0"
+     if below:
+@@ -325,18 +331,17 @@ def gluenumberstring(above, below, isnegative):
+ 
+ 
+ def maxdownscale(value):
+-    "Maximum units a value can be scaled down without inventing data"
++    """Maximum units a value can be scaled down without inventing data."""
+     if "." in value:
+         digitcount = len(value.split(".")[1])
+         # Return a negative so it can be fed directly to a scaling function
+         return -(digitcount // 3)
+-    else:
+-        # No decimals, the value is already at the maximum down-scale
+-        return 0
++    # No decimals, the value is already at the maximum down-scale
++    return 0
+ 
+ 
+ def rescalestring(value, unitsscaled):
+-    "Rescale a number string by a given number of units"
++    """Rescale a number string by a given number of units."""
+     whole, dec, negative = breaknumberstring(value)
+     if unitsscaled == 0:
+         # This may seem redundant, but glue forces certain formatting details
+@@ -371,14 +376,14 @@ def rescalestring(value, unitsscaled):
+ 
+ 
+ def formatzero(value):
+-    "Scale a zero value for the unit with the highest available precision"
++    """Scale a zero value for the unit with the highest available precision."""
+     scale = maxdownscale(value)
+     newvalue = rescalestring(value, scale).lstrip("-")
+     return (newvalue, scale)
+ 
+ 
+ def scalestring(value):
+-    "Scales a number string to fit in the range 1.0-999.9"
++    """Scales a number string to fit in the range 1.0-999.9."""
+     if isstringzero(value):
+         return formatzero(value)
+     whole, dec, negative = breaknumberstring(value)
+@@ -414,7 +419,8 @@ def scalestring(value):
+ 
+ 
+ def fitinfield(value, fieldsize):
+-    "Attempt to fit value into a field, preserving as much data as possible"
++    """Attempt to fit value into a field, preserving as much data as
++    possible."""
+     vallen = len(value)
+     if fieldsize is None:
+         newvalue = value
+@@ -444,7 +450,7 @@ def fitinfield(value, fieldsize):
+ 
+ 
+ def cropprecision(value, ooms):
+-    "Crops digits below the maximum precision"
++    """Crops digits below the maximum precision."""
+     if "." not in value:  # No decimals, nothing to crop
+         return value
+     if ooms == 0:  # We are at the baseunit, crop it all
+@@ -459,7 +465,7 @@ def cropprecision(value, ooms):
+ 
+ 
+ def isstringzero(value):
+-    "Detects whether a string is equal to zero"
++    """Detects whether a string is equal to zero."""
+     for i in value:
+         if i not in ("-", ".", "0"):
+             return False
+@@ -467,23 +473,21 @@ def isstringzero(value):
+ 
+ 
+ def unitrelativeto(unit, move):
+-    "Returns a unit at a different scale from the input unit"
++    """Returns a unit at a different scale from the input unit."""
+     for group in unitgroups:
+         if unit in group:
+             if move is None:  # asking for the base unit
+                 return group[0]
+-            else:
+-                index = group.index(unit)
+-                index += move  # index of the new unit
+-                if 0 <= index < len(group):  # found the new unit
+-                    return group[index]
+-                else:  # not in range
+-                    return None
++            index = group.index(unit)
++            index += move  # index of the new unit
++            if 0 <= index < len(group):  # found the new unit
++                return group[index]
++            return None
+     return None  # couldn't find anything
+ 
+ 
+ def unitifyvar(value, varname, baseunit=None, width=8, unitSpace=False):
+-    "Call unitify() with the correct units for varname"
++    """Call unitify() with the correct units for varname."""
+     if varname in S_VARS:
+         start = UNIT_S
+     elif varname in MS_VARS:
+@@ -496,7 +500,10 @@ def unitifyvar(value, varname, baseunit=None, width=8, unitSpace=False):
+ 
+ 
+ def unitify(value, startingunit, baseunit=None, width=8, unitSpace=False):
+-    "Formats a numberstring with relevant units. Attempts to fit in width."
++    """Formats a numberstring with relevant units.
++
++    Attempts to fit in width.
++    """
+     if baseunit is None:
+         baseunit = getunitgroup(startingunit)[0]
+     ooms = oomsbetweenunits(startingunit, baseunit)
+@@ -525,46 +532,9 @@ def unitify(value, startingunit, baseunit=None, width=8, unitSpace=False):
+     return newvalue
+ 
+ 
+-def f8dot4(f):
+-    "Scaled floating point formatting to fit in 8 characters"
+-
+-    if isinstance(f, str):
+-        # a string? pass it on as a signal
+-        return "%8s" % f
+-    if not isinstance(f, (int, float)):
+-        # huh?
+-        return "       X"
+-    if str(float(f)).lower() == 'nan':
+-        # yes, this is a better test than math.isnan()
+-        # it also catches None, strings, etc.
+-        return "     nan"
+-
+-    fmt = "%8d"          # xxxxxxxx or -xxxxxxx
+-    if f >= 0:
+-        if f < 1000.0:
+-            fmt = "%8.4f"    # xxx.xxxx  normal case
+-        elif f < 10000.0:
+-            fmt = "%8.3f"    # xxxx.xxx
+-        elif f < 100000.0:
+-            fmt = "%8.2f"    # xxxxx.xx
+-        elif f < 1000000.0:
+-            fmt = "%8.1f"    # xxxxxx.x
+-    else:
+-        # negative number, account for minus sign
+-        if f > -100.0:
+-            fmt = "%8.4f"      # -xx.xxxx  normal case
+-        elif f > -1000.0:
+-            fmt = "%8.3f"      # -xxx.xxx
+-        elif f > -10000.0:
+-            fmt = "%8.2f"      # -xxxx.xx
+-        elif f > -100000.0:
+-            fmt = "%8.1f"      # -xxxxx.x
+-
+-    return fmt % f
+-
++def f8poly(f, clip):
++    """Scaled floating point formatting to fit in 8 characters."""
+ 
+-def f8dot3(f):
+-    "Scaled floating point formatting to fit in 8 characters"
+     if isinstance(f, str):
+         # a string? pass it on as a signal
+         return "%8s" % f
+@@ -575,29 +545,21 @@ def f8dot3(f):
+         # yes, this is a better test than math.isnan()
+         # it also catches None, strings, etc.
+         return "     nan"
++    # The following chunk is thool code
++    digits = 8 if f >= 0 else 7
++    fab = abs(f)
++    for _ in range(5, 0, -1):
++        if fab < 10 ** (digits - _ - 1):
++            return '{:8.{}f}'.format(f, min(clip, _))
++    return '%8d' % f
+ 
+-    fmt = "%8d"          # xxxxxxxx or -xxxxxxx
+-    if f >= 0:
+-        if f < 10000.0:
+-            fmt = "%8.3f"    # xxxx.xxx  normal case
+-        elif f < 100000.0:
+-            fmt = "%8.2f"    # xxxxx.xx
+-        elif f < 1000000.0:
+-            fmt = "%8.1f"    # xxxxxx.x
+-    else:
+-        # negative number, account for minus sign
+-        if f > -1000.0:
+-            fmt = "%8.3f"    # -xxx.xxx  normal case
+-        elif f > -10000.0:
+-            fmt = "%8.2f"    # -xxxx.xx
+-        elif f > -100000.0:
+-            fmt = "%8.1f"    # -xxxxx.x
+ 
+-    return fmt % f
++f8dot4 = lambda f: f8poly(f, 4)
++f8dot3 = lambda f: f8poly(f, 3)
+ 
+ 
+ def monoclock():
+-    "Try to get a monotonic clock value unaffected by NTP stepping."
++    """Try to get a monotonic clock value unaffected by NTP stepping."""
+     try:
+         # Available in Python 3.3 and up.
+         return time.monotonic()
+@@ -606,8 +568,11 @@ def monoclock():
+ 
+ 
+ class Cache:
++
+     "Simple time-based cache"
+ 
++    """Simple time-based cache."""
++
+     def __init__(self, defaultTimeout=300):  # 5 min default TTL
+         self.defaultTimeout = defaultTimeout
+         self._cache = {}
+@@ -617,11 +582,9 @@ class Cache:
+             value, settime, ttl = self._cache[key]
+             if settime >= monoclock() - ttl:
+                 return value
+-            else:  # key expired, delete it
+-                del self._cache[key]
+-                return None
+-        else:
++            del self._cache[key]  # key expired, delete it
+             return None
++        return None
+ 
+     def set(self, key, value, customTTL=None):
+         ttl = customTTL if customTTL is not None else self.defaultTimeout
+@@ -633,7 +596,7 @@ canonicalization_cache = Cache()
+ 
+ 
+ def canonicalize_dns(inhost, family=socket.AF_UNSPEC):
+-    "Canonicalize a hostname or numeric IP address."
++    """Canonicalize a hostname or numeric IP address."""
+     resname = canonicalization_cache.get(inhost)
+     if resname is not None:
+         return resname
+@@ -647,7 +610,7 @@ def canonicalize_dns(inhost, family=socket.AF_UNSPEC):
+                                 socket.AI_CANONNAME)
+     except socket.gaierror:
+         return "DNSFAIL:%s" % hostname
+-    (family, socktype, proto, canonname, sockaddr) = ai[0]
++    (family, socktype, _, canonname, sockaddr) = ai[0]
+     try:
+         name = socket.getnameinfo(sockaddr, socket.NI_NAMEREQD)
+         result = name[0].lower() + portsuffix
+@@ -674,7 +637,7 @@ if str is bytes:  # We are on python 2.x
+ 
+ 
+ def termsize():  # pragma: no cover
+-    "Return the current terminal size."
++    """Return the current terminal size."""
+     # Alternatives at http://stackoverflow.com/questions/566746
+     # The way this is used makes it not a big deal if the default is wrong.
+     size = (80, 24)
+@@ -687,7 +650,7 @@ def termsize():  # pragma: no cover
+         else:
+             try:
+                 # OK, Python version < 3.3, cope
+-                h, w, hp, wp = struct.unpack(
++                h, w, hp, _ = struct.unpack(
+                     'HHHH',
+                     fcntl.ioctl(2, termios.TIOCGWINSZ,
+                                 struct.pack('HHHH', 0, 0, 0, 0)))
+@@ -698,8 +661,11 @@ def termsize():  # pragma: no cover
+ 
+ 
+ class PeerStatusWord:
++
+     "A peer status word from readstats(), dissected for display"
+ 
++    """A peer status word from readstats(), dissected for display."""
++
+     def __init__(self, status, pktversion=ntp.magic.NTP_VERSION):
+         # Event
+         self.event = ntp.control.CTL_PEER_EVENT(status)
+@@ -775,7 +741,7 @@ class PeerStatusWord:
+ 
+ 
+ def cook(variables, showunits=False, sep=", "):
+-    "Cooked-mode variable display."
++    """Cooked-mode variable display."""
+     width = ntp.util.termsize().width - 2
+     text = ""
+     specials = ("filtdelay", "filtoffset", "filtdisp", "filterror")
+@@ -825,7 +791,7 @@ def cook(variables, showunits=False, sep=", "):
+                     "peer_loop",        # BOGON12
+                     "peer_unreach"      # BOGON13
+                 )
+-                for (i, n) in enumerate(tstflagnames):
++                for (i, _) in enumerate(tstflagnames):
+                     if (1 << i) & value:
+                         item += tstflagnames[i] + " "
+             item = item[:-1]
+@@ -866,8 +832,8 @@ def cook(variables, showunits=False, sep=", "):
+ 
+ 
+ class PeerSummary:
+-    "Reusable report generator for peer statistics"
+ 
++    """Reusable report generator for peer statistics."""
+     def __init__(self, displaymode, pktversion, showhostnames,
+                  wideremote, showunits=False, termwidth=None,
+                  debug=0, logfp=sys.stderr):
+@@ -899,7 +865,7 @@ class PeerSummary:
+ 
+     @staticmethod
+     def prettyinterval(diff):
+-        "Print an interval in natural time units."
++        """Print an interval in natural time units."""
+         if not isinstance(diff, int) or diff <= 0:
+             return '-'
+         if diff <= 2048:
+@@ -915,20 +881,19 @@ class PeerSummary:
+ 
+     @staticmethod
+     def high_truncate(hostname, maxlen):
+-        "Truncate on the left using leading _ to indicate 'more'."
++        """Truncate on the left using leading _ to indicate 'more'."""
+         # Used for local IPv6 addresses, best distinguished by low bits
+         if len(hostname) <= maxlen:
+             return hostname
+-        else:
+-            return '-' + hostname[-maxlen+1:]
++        return '-' + hostname[-maxlen+1:]
+ 
+     @staticmethod
+     def is_clock(variables):
+-        "Does a set of variables look like it returned from a clock?"
++        """Does a set of variables look like it returned from a clock?"""
+         return "srchost" in variables and '(' in variables["srchost"][0]
+ 
+     def header(self):
+-        "Column headers for peer display"
++        """Column headers for peer display."""
+         if self.displaymode == "apeers":
+             self.__header = self.__remote + \
+                 "   refid   assid  ".ljust(self.refidwidth) + \
+@@ -944,11 +909,11 @@ class PeerSummary:
+         return self.__header
+ 
+     def width(self):
+-        "Width of display"
++        """Width of display."""
+         return 79 + self.horizontal_slack
+ 
+     def summary(self, rstatus, variables, associd):
+-        "Peer status summary line."
++        """Peer status summary line."""
+         clock_name = ''
+         dstadr_refid = ""
+         dstport = 0
+@@ -1219,14 +1184,15 @@ class PeerSummary:
+         return line
+ 
+     def intervals(self):
+-        "Return and flush the list of actual poll intervals."
++        """Return and flush the list of actual poll intervals."""
+         res = self.polls[:]
+         self.polls = []
+         return res
+ 
+ 
+ class MRUSummary:
+-    "Reusable class for MRU entry summary generation."
++
++    """Reusable class for MRU entry summary generation."""
+ 
+     def __init__(self, showhostnames, wideremote=False,
+                  debug=0, logfp=sys.stderr):
+@@ -1317,7 +1283,8 @@ class MRUSummary:
+ 
+ 
+ class ReslistSummary:
+-    "Reusable class for reslist entry summary generation."
++
++    """Reusable class for reslist entry summary generation."""
+     header = """\
+    hits    addr/prefix or addr mask
+            restrictions
+@@ -1357,7 +1324,8 @@ class ReslistSummary:
+ 
+ 
+ class IfstatsSummary:
+-    "Reusable class for ifstats entry summary generation."
++
++    """Reusable class for ifstats entry summary generation."""
+     header = """\
+     interface name                                  send
+  #  address/broadcast     drop flag received sent failed peers   uptime
+@@ -1416,7 +1384,8 @@ try:
+     from collections import OrderedDict
+ except ImportError:  # pragma: no cover
+     class OrderedDict(dict):
+-        "A stupid simple implementation in order to be back-portable to 2.6"
++        """A stupid simple implementation in order to be back-portable to
++        2.6."""
+ 
+         # This can be simple because it doesn't need to be fast.
+         # The programs that use it only have to run at human speed,
+diff --git a/tests/option-tester.sh b/tests/option-tester.sh
+index 33191785b..d37445a3b 100755
+--- a/tests/option-tester.sh
++++ b/tests/option-tester.sh
+@@ -19,7 +19,7 @@ PURGE=""
+ SECCOMP="$(pkg-config libseccomp --variable=includedir)"
+ SECCOMP="$SECCOMP/seccomp.h"
+ LINUX=""
+-if [ `uname -s` = "Linux" -a -n "$SECCOMP" -a -f "$SECCOMPH" ]
++if [ "$(uname -s)" = "Linux" -a -n "$SECCOMP" -a -f "$SECCOMPH" ]
+ then
+   # Not supported on CentOS 6
+   LINUX="--enable-seccomp"
+@@ -38,7 +38,7 @@ then
+     DISABLE_NTS="--disable-nts"
+   fi
+ else
+-  if ! $PYTHON ../wafhelpers/tlscheck
++  if ! "${PYTHON}" ../wafhelpers/tlscheck
+   then
+     DISABLE_NTS="--disable-nts"
+   fi
+@@ -46,22 +46,22 @@ fi
+ 
+ doit ()
+ {
+-  DIR=test-$1
+-  [ ! -d $DIR ] && mkdir $DIR
+-  rm -rf $DIR/*
+-  $PYTHON ./waf configure $DISABLE_NTS --out=$DIR $2 2>&1 | tee    $DIR/test.log
++  DIR="test-${1}"
++  [ ! -d "${DIR}" ] && mkdir "${DIR}"
++  rm -rf "${DIR}/"*
++  "${PYTHON}" ./waf configure "${DISABLE_NTS}" --out="${DIR}" $2 2>&1 | tee    "${DIR}/test.log"
+   WAF1=$?
+   WAF2=0
+   WAF3=0
+   if [ "$WAF1" = 0 ]
+   then
+-  echo                                 2>&1    | tee -a $DIR/test.log
+-  $PYTHON ./waf build                   2>&1    | tee -a $DIR/test.log
++  echo                                 2>&1    | tee -a "${DIR}/test.log"
++  "${PYTHON}" ./waf build                   2>&1    | tee -a "${DIR}/test.log"
+   WAF2=$?
+   if [ "$WAF2" = 0 ]
+   then
+-  echo                                 2>&1    | tee -a $DIR/test.log
+-  $PYTHON ./waf check                   2>&1    | tee -a $DIR/test.log
++  echo                                 2>&1    | tee -a "${DIR}/test.log"
++  "${PYTHON}" ./waf check                   2>&1    | tee -a "${DIR}/test.log"
+   WAF3=$?
+   else
+     PURGE="${PURGE} ${PYTHON}-${DIR}-build"
+@@ -71,8 +71,8 @@ doit ()
+   fi
+   if [ "$WAF1" != 0 -o "$WAF2" != 0 -o "$WAF3" != 0 ]
+   then
+-    echo                               2>&1   | tee -a $DIR/test.log
+-    echo "Trouble with $DIR"           2>&1   | tee -a $DIR/test.log
++    echo                                 2>&1   | tee -a "${DIR}/test.log"
++    echo "Trouble with ${DIR}"           2>&1   | tee -a "${DIR}/test.log"
+   fi
+   if [ "$WAF3" != 0 ]
+   then
+@@ -91,8 +91,8 @@ doit classic "--enable-classic-mode --refclock=all --disable-doc --disable-manpa
+ 
+ doit all     "--enable-warnings --enable-debug --enable-debug-gdb --enable-debug-timing --refclock=all --enable-leap-smear --enable-mssntp --enable-early-droproot --disable-fuzz $LINUX --disable-doc --disable-manpage"
+ 
+-if [ "`which asciidoc 2>/dev/null`" != "" -a \
+-     "`which xsltproc 2>/dev/null`" != "" ]
++if [ "$(which asciidoc 2>/dev/null)" != "" -a \
++     "$(which xsltproc 2>/dev/null)" != "" ]
+ then
+ doit doc     ""
+ fi
+@@ -107,10 +107,10 @@ grep "The configuration failed"  test*/test.log
+ grep ^Trouble                    test*/test.log
+ echo
+ 
+-echo -n "## ";  $PYTHON --version
+-if test -n "$PYTHONPATH"
++echo -n "## ";  "${PYTHON}" --version
++if test -n "${PYTHONPATH}"
+ then
+-  echo "## PYTHONPATH is" \"$PYTHONPATH\"
++  echo "## PYTHONPATH is \"${PYTHONPATH}\""
+ fi
+ 
+ if ! (set -o pipefail) 2>/dev/null
+@@ -121,7 +121,7 @@ then
+   PURGE="${PURGE} pipefail"
+ fi
+ 
+-if [ `uname -s` = "Linux" -a -z "$SECCOMP" ]
++if [ $(uname -s) = "Linux" -a -z "$SECCOMP" ]
+ then
+     echo
+     echo "### Warning: Missing seccomp.h (on a Linux system)"
+diff --git a/tests/pylib/test_ntpc.py b/tests/pylib/test_ntpc.py
+index 5018d1272..348ab89bf 100644
+--- a/tests/pylib/test_ntpc.py
++++ b/tests/pylib/test_ntpc.py
+@@ -1,3 +1,4 @@
++"""Pytest module for ntp.ntpc module."""
+ #! /usr/bin/env python
+ # -*- coding: utf-8 -*-
+ # SPDX-License-Identifier: BSD-2-Clause
+@@ -6,6 +7,9 @@ import ntp.ntpc
+ 
+ 
+ class TestPylibNtpc(unittest.TestCase):
++
++    """Add test class for ntp.ntpc module."""
++
+     lfp_set = [
+         ("0xcfba1ce0.80000000", 1276092000.5,
+          "cfba1ce0.80000000 2010-06-09T14:00:00.500Z"),
+@@ -14,17 +18,19 @@ class TestPylibNtpc(unittest.TestCase):
+         ]
+ 
+     def test_statustoa(self):
++        """Test that statustoa works correctly."""
+         self.assertEqual("leap_add_sec, sync_22, 7 events, no_sys_peer",
+-                         ntp.ntpc.statustoa(ntp.ntpc.TYPE_SYS, 0x12345678));
++                         ntp.ntpc.statustoa(ntp.ntpc.TYPE_SYS, 0x12345678))
+         self.assertEqual("authenb, reach, sel_sys.peer, 7 events, access_denied",
+-                         ntp.ntpc.statustoa(ntp.ntpc.TYPE_PEER, 0x12345678));
++                         ntp.ntpc.statustoa(ntp.ntpc.TYPE_PEER, 0x12345678))
+         self.assertEqual("7 events, clk_8",
+-                         ntp.ntpc.statustoa(ntp.ntpc.TYPE_CLOCK, 0x12345678));
++                         ntp.ntpc.statustoa(ntp.ntpc.TYPE_CLOCK, 0x12345678))
+ 
+     def test_lfp(self):
++        """Test that prettydate and lfptofloat work properly."""
+         for (in_string, to_float, to_string) in self.lfp_set:
+-            self.assertEqual(ntp.ntpc.prettydate(in_string), to_string);
+-            self.assertAlmostEqual(ntp.ntpc.lfptofloat(in_string), to_float);
++            self.assertEqual(ntp.ntpc.prettydate(in_string), to_string)
++            self.assertAlmostEqual(ntp.ntpc.lfptofloat(in_string), to_float)
+ 
+ 
+ if __name__ == '__main__':
+diff --git a/tests/python2-tester.sh b/tests/python2-tester.sh
+index 7e2588569..36af060ca 100755
+--- a/tests/python2-tester.sh
++++ b/tests/python2-tester.sh
+@@ -5,7 +5,7 @@
+ # This is a clone of option-tester.sh
+ # to build with python2 and do minimal (version) testing.
+ 
+-if [ "`which python2 2>/dev/null`" = "" ]
++if [ "$(which python2 2>/dev/null)" = "" ]
+ then
+   echo "# Error: No python2 on this system."
+   exit 1
+@@ -21,28 +21,28 @@ fi
+ doit ()
+ {
+   DIR=test-$1
+-  [ ! -d $DIR ] && mkdir $DIR
+-  rm -rf $DIR/*
+-  python2 ./waf configure --out=$DIR $2 2>&1 | tee    $DIR/test.log
++  [ ! -d "${DIR}" ] && mkdir "${DIR}"
++  rm -rf "${DIR}"/*
++  python2 ./waf configure --out="${DIR}" $2 2>&1 | tee    "${DIR}/test.log"
+   WAF1=$?
+   WAF2=0
+   WAF3=0
+   if [ "$WAF1" = 0 ]
+   then
+-  echo                            2>&1   | tee -a $DIR/test.log
+-  python2 ./waf build             2>&1   | tee -a $DIR/test.log
++  echo                            2>&1   | tee -a "${DIR}/test.log"
++  python2 ./waf build             2>&1   | tee -a "${DIR}/test.log"
+   WAF2=$?
+   if [ "$WAF2" = 0 ]
+   then
+-  echo                            2>&1   | tee -a $DIR/test.log
+-  python2 ./waf check             2>&1   | tee -a $DIR/test.log
++  echo                            2>&1   | tee -a "${DIR}/test.log"
++  python2 ./waf check             2>&1   | tee -a "${DIR}/test.log"
+   WAF3=$?
+   fi
+   fi
+   if [ "$WAF1" != 0 -o "$WAF2" != 0 -o "$WAF3" != 0 ] 
+   then
+-    echo                          2>&1   | tee -a $DIR/test.log
+-    echo "Trouble with $DIR"      2>&1   | tee -a $DIR/test.log
++    echo                          2>&1   | tee -a "${DIR}/test.log"
++    echo "Trouble with ${DIR}"      2>&1   | tee -a "${DIR}/test.log"
+   fi
+   echo
+   echo
+@@ -61,9 +61,9 @@ grep ^Trouble                    test*/test.log
+ echo
+ 
+ echo -n "## ";  python2 --version
+-if test -n "$PYTHONPATH"
++if test -n "${PYTHONPATH}"
+ then
+-  echo "## PYTHONPATH is" \"$PYTHONPATH\"
++  echo "## PYTHONPATH is \"${PYTHONPATH}\""
+ fi
+ 
+ if ! /bin/sh -c "set -o pipefail" 2> /dev/null
+diff --git a/tests/python3-tester.sh b/tests/python3-tester.sh
+index 46865eca7..5fe333ba7 100755
+--- a/tests/python3-tester.sh
++++ b/tests/python3-tester.sh
+@@ -5,7 +5,7 @@
+ # This is a clone of option-tester.sh
+ # to build with python3 and do minimal (version) testing.
+ 
+-if [ "`which python3 2>/dev/null`" = "" ]
++if [ "$(which python3 2>/dev/null)" = "" ]
+ then
+   echo "# Error: No python3 on this system."
+   exit 1
+@@ -21,28 +21,28 @@ fi
+ doit ()
+ {
+   DIR=test-$1
+-  [ ! -d $DIR ] && mkdir $DIR
+-  rm -rf $DIR/*
+-  python3 ./waf configure --out=$DIR $2 2>&1 | tee    $DIR/test.log
++  [ ! -d "${DIR}" ] && mkdir "${DIR}"
++  rm -rf "${DIR}"/*
++  python3 ./waf configure --out="${DIR}" $2 2>&1 | tee    "${DIR}/test.log"
+   WAF1=$?
+   WAF2=0
+   WAF3=0
+   if [ "$WAF1" = 0 ]
+   then
+-  echo                            2>&1   | tee -a $DIR/test.log
+-  python3 ./waf build             2>&1   | tee -a $DIR/test.log
++  echo                            2>&1   | tee -a "${DIR}/test.log"
++  python3 ./waf build             2>&1   | tee -a "${DIR}/test.log"
+   WAF2=$?
+   if [ "$WAF2" = 0 ]
+   then
+-  echo                            2>&1   | tee -a $DIR/test.log
+-  python3 ./waf check             2>&1   | tee -a $DIR/test.log
++  echo                            2>&1   | tee -a "${DIR}/test.log"
++  python3 ./waf check             2>&1   | tee -a "${DIR}/test.log"
+   WAF3=$?
+   fi
+   fi
+   if [ "$WAF1" != 0 -o "$WAF2" != 0 -o "$WAF3" != 0 ] 
+   then
+-    echo                          2>&1   | tee -a $DIR/test.log
+-    echo "Trouble with $DIR"      2>&1   | tee -a $DIR/test.log
++    echo                          2>&1   | tee -a "${DIR}/test.log"
++    echo "Trouble with ${DIR}"      2>&1   | tee -a "${DIR}/test.log"
+   fi
+   echo
+   echo
+@@ -61,9 +61,9 @@ grep ^Trouble                    test*/test.log
+ echo
+ 
+ echo -n "## ";  python3 --version
+-if test -n "$PYTHONPATH"
++if test -n "${PYTHONPATH}"
+ then
+-  echo "## PYTHONPATH is" \"$PYTHONPATH\"
++  echo "## PYTHONPATH is \"${PYTHONPATH}\""
+ fi
+ 
+ if ! /bin/sh -c "set -o pipefail" 2> /dev/null
+diff --git a/wafhelpers/asciidoc.py b/wafhelpers/asciidoc.py
+index d2a5e61e5..152f36b10 100644
+--- a/wafhelpers/asciidoc.py
++++ b/wafhelpers/asciidoc.py
+@@ -1,4 +1,4 @@
+-'''Most of the functionality for building HTML and man pages from AsciiDoc.'''
++"""Most of the functionality for building HTML and man pages from AsciiDoc."""
+ 
+ import re
+ 
+@@ -7,7 +7,7 @@ from waflib.TaskGen import extension  # pylint: disable=import-error
+ 
+ 
+ def options(opt):
+-    'Add command line options for AsciiDoc processing.'
++    """Add command line options for AsciiDoc processing."""
+     grp = opt.add_option_group('NTP documentation configure options')
+     grp.add_option('--disable-doc', action='store_true',
+                    default=False, help='Disable HTML document building.')
+@@ -20,8 +20,7 @@ def options(opt):
+ 
+ 
+ def configure(ctx):
+-    'Set options from the extended environment and command line arguments.'
+-
++    """Set options from the extended environment and command line arguments."""
+     if ctx.options.disable_doc and ctx.options.enable_doc:
+         ctx.fatal('--disable-doc and --enable-doc conflict.')
+     if ctx.options.disable_manpage and ctx.options.enable_manpage:
+@@ -128,7 +127,7 @@ def configure(ctx):
+ 
+ 
+ def build(ctx):
+-    'Set processor noise level and set HTML pages to build.'
++    """Set processor noise level and set HTML pages to build."""
+     from waflib.Logs import verbose  # pylint: disable=import-error
+     if verbose > 1:  # Pass verbosity to AsciiDoc toolchain
+         if ctx.env.ARGS_DOC:
+@@ -140,7 +139,8 @@ def build(ctx):
+ 
+ 
+ class html(Task.Task):
+-    'Define HTML build process.'
++
++    """Define HTML build process."""
+     # Optional weight to tune the priority for task instances.
+     # The higher, the earlier. The weight only applies to single task objects.
+     weight = 3  # set arbitrarily high to be first as to not slow down later tasks
+@@ -149,14 +149,15 @@ class html(Task.Task):
+ 
+ 
+ class man(Task.Task):
+-    'Define manpage build process.'
++
++    """Define manpage build process."""
+     weight = 2  # set arbitrarily high to be second as to not slow down later tasks (Failed)
+     run_str = '${ARGS_MAN} ${SRC[0].abspath()}'
+ 
+ 
+ @extension('.adoc')
+ def run_html(self, node):
+-    'Add HTML build caller function.'
++    """Add HTML build caller function."""
+     out = node.change_ext('.html')
+     tsk = self.create_task('html', node, [out])
+     tsk.cwd = node.parent.get_bld().abspath()
+@@ -164,7 +165,7 @@ def run_html(self, node):
+ 
+ @extension('.man-tmp')
+ def run_manpage(self, node):
+-    'Add manpage build caller function.'
++    """Add manpage build caller function."""
+     n_file = node.path_from(self.bld.bldnode)
+     out = '%s.%s' % (n_file.replace('-man.adoc.man-tmp', ''), self.section)
+     out_n = self.bld.path.find_or_declare(out)
+diff --git a/wafhelpers/bin_test.py b/wafhelpers/bin_test.py
+index 93b983870..e6213bb98 100644
+--- a/wafhelpers/bin_test.py
++++ b/wafhelpers/bin_test.py
+@@ -41,12 +41,14 @@ test_logs = []
+ 
+ 
+ def addLog(color, text):
+-    test_logs.append((color, text))
++    """Append to the test logs."""
++    test_logs.append((color, text.rstrip()))
+ 
+ 
+-def bin_test_summary(ctx):
++def bin_test_summary(_):
++    """Print out the test logs."""
+     for i in test_logs:
+-        waflib.Logs.pprint(i[0], i[1])
++        waflib.Logs.pprint(*i)
+ 
+ 
+ def run(cmd, reg, pythonic):
+@@ -85,7 +87,7 @@ def run(cmd, reg, pythonic):
+     return False
+ 
+ 
+-def cmd_bin_test(ctx, config):
++def cmd_bin_test(ctx, _):
+     """Run a suite of binary tests."""
+     fails = 0
+ 
+diff --git a/wafhelpers/check_sizeof.py b/wafhelpers/check_sizeof.py
+index f58cce036..f880d352d 100644
+--- a/wafhelpers/check_sizeof.py
++++ b/wafhelpers/check_sizeof.py
+@@ -10,32 +10,6 @@ int main(void) {
+ }
+ """
+ 
+-
+-def check_sizeof_host(ctx, header, sizeof, mandatory=True):
+-    sizeof_ns = sizeof.replace(" ", "_")
+-    name = "NTP_SIZEOF_%s" % sizeof_ns.upper()
+-
+-    header_snippet = ""
+-    if header:
+-        ctx.start_msg("Checking sizeof %s (%s)" % (sizeof, header))
+-        header_snippet = "#include <%s>" % header
+-    else:
+-        ctx.start_msg("Checking sizeof %s" % (sizeof))
+-
+-    ctx.check_cc(
+-        fragment=SIZE_FRAG % (header_snippet, sizeof),
+-        define_name=name,
+-        execute=True,
+-        define_ret=True,
+-        quote=False,
+-        mandatory=mandatory,
+-        comment="Size of %s from <%s>" % (sizeof, header)
+-    )
+-    ctx.end_msg(ctx.get_define(name))
+-
+-
+-# Cross compile check.  Much slower so we do not run it all the time.
+-
+ SIZE_FRAG_CROSS = """
+ %s
+ #include <sys/stat.h>
+@@ -47,19 +21,19 @@ int main(void) {
+ """
+ 
+ 
+-def check_sizeof_cross(ctx, header, sizeof, mandatory=True):
++def check_sizeof_common(ctx, header, sizeof):
+     sizeof_ns = sizeof.replace(" ", "_")
+     name = "NTP_SIZEOF_%s" % sizeof_ns.upper()
+ 
+-    header_snippet = ""
+     if header:
+         ctx.start_msg("Checking sizeof %s (%s)" % (sizeof, header))
+-        header_snippet = "#include <%s>" % header
+-    else:
+-        ctx.start_msg("Checking sizeof %s" % (sizeof))
++        return "#include <%s>" % header, name
++    ctx.start_msg("Checking sizeof %s" % (sizeof))
++    return "", name
+ 
++def check_sizeof_c(ctx, header, sizeof, mandatory=True):
++    header_snippet, name = check_sizeof_common(ctx, header, sizeof)
+     for size in range(2, 13):
+-
+         try:
+             ctx.check_cc(
+                 fragment=SIZE_FRAG_CROSS % (header_snippet, sizeof, size),
+@@ -73,13 +47,29 @@ def check_sizeof_cross(ctx, header, sizeof, mandatory=True):
+             return
+         except Errors.ConfigurationError:
+             pass
+-
++    ctx.end_msg('Error')
+     raise     # never reached.
+ 
+ 
++def check_sizeof_n(ctx, header, sizeof, mandatory=True):
++    header_snippet, name = check_sizeof_common(ctx, header, sizeof)
++    ctx.check_cc(
++        fragment=SIZE_FRAG % (header_snippet, sizeof),
++        define_name=name,
++        execute=True,
++        define_ret=True,
++        quote=False,
++        mandatory=mandatory,
++        comment="Size of %s from <%s>" % (sizeof, header)
++    )
++    ctx.end_msg(ctx.get_define(name))
++
++
+ @conf
+-def check_sizeof(*kwargs):
+-    if kwargs[0].env.ENABLE_CROSS:
+-        check_sizeof_cross(*kwargs)
+-    else:
+-        check_sizeof_host(*kwargs)
++def check_sizeof(ctx, header, sizeof):
++    """Check and  return the length of a type.
++    
++    The cross compile check is O(n) slower so we do not run it all the time.
++    """
++    cb = check_sizeof_c if ctx.env.ENABLE_CROSS else check_sizeof_n
++    cb(ctx, header, sizeof, mandatory=True)
+diff --git a/wafhelpers/options.py b/wafhelpers/options.py
+index cb75b3752..043758d9e 100644
+--- a/wafhelpers/options.py
++++ b/wafhelpers/options.py
+@@ -1,10 +1,12 @@
+ def options_cmd(ctx, config):
++    """Add most options for NTPsec to optparse derivative."""
+     ctx.load("compiler_c")
+     ctx.load("msvc")
+     ctx.load('waf_unit_test')
+     ctx.load('gnu_dirs')
+ 
+-    def callback_flags(option, opt, value, parser):
++    def callback_flags(option, opt, value, _):
++        """Store some command line options into config."""
+         config["OPT_STORE"].setdefault(opt, []).append(value)
+ 
+     grp = ctx.add_option_group("NTP configure options")
+@@ -35,7 +37,7 @@ def options_cmd(ctx, config):
+     grp = ctx.add_option_group("NTP cross compile options")
+     grp.add_option('--cross-compiler', type='string',
+                    help="Path to cross compiler CC. (enables cross-compiling)")
+-    grp.add_option('--cross-cflags', type='string',  action="callback",
++    grp.add_option('--cross-cflags', type='string', action="callback",
+                    callback=callback_flags, help="Cross compiler CFLAGS.")
+     grp.add_option('--cross-ldflags', type='string', action="callback",
+                    callback=callback_flags, help="Cross compiler LDFLAGS.")
+diff --git a/wafhelpers/probes.py b/wafhelpers/probes.py
+index d65196a4f..a745f1bf3 100644
+--- a/wafhelpers/probes.py
++++ b/wafhelpers/probes.py
+@@ -1,11 +1,9 @@
+-"""
+-This module exists to contain custom probe functions so they don't clutter
+-up the logic in the main configure.py.
+-"""
++"""This module exists to contain custom probe functions so they don't clutter
++up the logic in the main configure.py."""
+ 
+ 
+ def probe_header(ctx, header, prerequisites, mandatory=False, use=None):
+-    "Check that a header (with its prerequisites) compiles."
++    """Check that a header (with its prerequisites) compiles."""
+     src = ""
+     for hdr in prerequisites + [header]:
+         src += "#include <%s>\n" % hdr
+@@ -24,7 +22,7 @@ def probe_header(ctx, header, prerequisites, mandatory=False, use=None):
+ 
+ 
+ def probe_function(ctx, function, prerequisites, mandatory=False, use=None):
+-    "Check that a function (with its prerequisites) compiles."
++    """Check that a function (with its prerequisites) compiles."""
+     src = ""
+     for hdr in prerequisites:
+         src += "#include <%s>\n" % hdr
+diff --git a/wafhelpers/refclock.py b/wafhelpers/refclock.py
+index 15c1c36be..d4dc1c3a2 100644
+--- a/wafhelpers/refclock.py
++++ b/wafhelpers/refclock.py
+@@ -1,3 +1,4 @@
++"""Add refclock backing and handle refclock options."""
+ from waflib.Configure import conf
+ from waflib.Logs import pprint
+ 
+@@ -105,6 +106,7 @@ refclock_map = {
+ 
+ @conf
+ def refclock_config(ctx):
++    """Handle refclock options."""
+     if ctx.options.refclocks == "all":
+         ids = refclock_map.keys()
+     else:
+@@ -118,11 +120,11 @@ def refclock_config(ctx):
+     [unique_id.append(x) for x in ids if x not in unique_id]
+ 
+     refclock = False
+-    for id in unique_id:
+-        if id not in refclock_map:
+-            ctx.fatal("'%s' is not a valid Refclock ID" % id)
++    for ident in unique_id:
++        if ident not in refclock_map:
++            ctx.fatal("'%s' is not a valid Refclock ID" % ident)
+ 
+-        rc = refclock_map[id]
++        rc = refclock_map[ident]
+ 
+         if rc['define'] == "CLOCK_GENERIC":
+             parse_clocks = (
+@@ -142,22 +144,21 @@ def refclock_config(ctx):
+             for subtype in parse_clocks:
+                 ctx.define(subtype, 1, comment="Enable individual parse clock")
+ 
+-        ctx.start_msg("Enabling Refclock %s (%s):" % (rc["descr"], id))
++        ctx.start_msg("Enabling Refclock %s (%s):" % (rc["descr"], ident))
+ 
+-        if "require" in rc:
+-            if "ppsapi" in rc["require"]:
+-                if not ctx.get_define("HAVE_PPSAPI"):
+-                    ctx.end_msg("No")
+-                    pprint("RED",
+-                           "Refclock \"%s\" disabled, PPS API has not "
+-                           "been detected as working." % rc["descr"])
+-                    continue
++        if not ctx.get_define("HAVE_PPSAPI"):
++            if "ppsapi" in rc.get("require", {}):
++                ctx.end_msg("No")
++                pprint("RED",
++                       "Refclock \"%s\" disabled, PPS API has not "
++                       "been detected as working." % rc["descr"])
++                continue
+ 
+         ctx.env.REFCLOCK_SOURCE.append((rc["file"], rc["define"]))
+         ctx.env["REFCLOCK_%s" % rc["file"].upper()] = True
+         ctx.define(rc["define"], 1,
+                    comment="Enable '%s' refclock" % rc["descr"])
+-        ctx.env.REFCLOCK_LIST += [str(id)]
++        ctx.env.REFCLOCK_LIST += [str(ident)]
+ 
+         ctx.end_msg("Yes")
+ 
+diff --git a/wafhelpers/waf.py b/wafhelpers/waf.py
+index 4f2d562a4..928b7f895 100644
+--- a/wafhelpers/waf.py
++++ b/wafhelpers/waf.py
+@@ -1,8 +1,10 @@
++"""Add three miscelaneous tools."""
+ from waflib.Configure import conf
+ from waflib.TaskGen import re_m4
+ 
+ 
+ def manpage_subst_fun(self, code):
++    """Convert asciidoc source for manpage."""
+     # Since we are providing a custom substitution method, we must implement
+     # the default behavior, since we want that too.
+     global re_m4
+@@ -14,6 +16,7 @@ def manpage_subst_fun(self, code):
+     lst = []
+ 
+     def repl(match):
++        """Change @foo@ to %(foo) for (not) str.format()."""
+         g = match.group
+         if g(1):
+             lst.append(g(1))
+@@ -40,7 +43,7 @@ def manpage_subst_fun(self, code):
+ 
+ @conf
+ def manpage(ctx, section, source):
+-
++    """Build a man page in a section."""
+     if not ctx.env.BUILD_MAN:
+         return
+ 
+@@ -54,6 +57,7 @@ def manpage(ctx, section, source):
+ 
+ @conf
+ def ntp_test(ctx, **kwargs):
++    """Run a (Python?) test."""
+     bldnode = ctx.bldnode.abspath()
+     tg = ctx(**kwargs)
+ 

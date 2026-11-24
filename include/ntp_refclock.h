@@ -255,6 +255,12 @@ extern  struct refclock refclock_oncore;
 #define refclock_oncore refclock_none
 #endif
 
+#if defined(CLOCK_PHC) && defined(HAVE_LINUX_PTP_CLOCK_H)
+extern  struct refclock refclock_phc;
+#else
+#define refclock_phc    refclock_none
+#endif
+
 #if defined (CLOCK_PPS) && defined(HAVE_PPSAPI)
 extern  struct refclock refclock_pps;
 #else

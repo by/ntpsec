@@ -103,6 +103,13 @@ refclock_map = {
         "descr":    "GPSD NG client protocol",
         "define":   "CLOCK_GPSDJSON",
         "file":     "gpsd"
+    },
+
+    "phc": {
+        "descr":    "PTP Hardware Clock (/dev/ptpN)",
+        "define":   "CLOCK_PHC",
+        "require":  ["ptp_clock"],
+        "file":     "phc"
     }
 }
 
@@ -155,6 +162,13 @@ def refclock_config(ctx):
                     pprint("RED",
                            "Refclock \"%s\" disabled, PPS API has not "
                            "been detected as working." % rc["descr"])
+                    continue
+            if "ptp_clock" in rc["require"]:
+                if not ctx.get_define("HAVE_LINUX_PTP_CLOCK_H"):
+                    ctx.end_msg("No")
+                    pprint("RED",
+                           "Refclock \"%s\" disabled, <linux/ptp_clock.h> "
+                           "not found (Linux only)." % rc["descr"])
                     continue
 
         ctx.env.REFCLOCK_SOURCE.append((rc["file"], rc["define"]))

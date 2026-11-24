@@ -229,6 +229,13 @@ extern bool leapsec_query(leap_result_t *qr, time_t when);
  */
 extern bool leapsec_frame(leap_result_t *qr);
 
+/* Return the TAI-UTC offset in effect at UTC time 'when', or -1 if
+ * no leap second table is loaded. Unlike leapsec_query(), this has no
+ * side effects on the leap era state machine, so it is safe to call
+ * from refclock drivers.
+ */
+extern int leapsec_tai_offset(time_t when);
+
 /* reset global state for unit tests */
 extern void leapsec_ut_pristine(void);
 

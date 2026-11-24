@@ -518,6 +518,27 @@ leapsec_getsig(
 }
 
 /* ------------------------------------------------------------------ */
+int
+leapsec_tai_offset(
+	time_t when)
+{
+	const leap_table_t * pt;
+	int idx;
+
+	pt = leapsec_get_table(false);
+	if (pt->head.size == 0) {
+		return -1;
+	}
+	/* entries are sorted newest first */
+	for (idx = 0; idx < pt->head.size; idx++) {
+		if (when >= pt->info[idx].ttime) {
+			return pt->info[idx].taiof;
+		}
+	}
+	return pt->head.base_tai;
+}
+
+/* ------------------------------------------------------------------ */
 bool
 leapsec_expired(
 	time_t       when)

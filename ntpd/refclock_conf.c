@@ -80,7 +80,8 @@ struct refclock * const refclock_conf[] = {
 	&refclock_none,		/* 43 was: REFCLK_RIPENCC */
 	&refclock_none,		/* 44 was: REFCLK_NEOCLOCK4X */
 	&refclock_none, 	/* 45 was: REFCLK_TSYNCPCI */
-	&refclock_gpsdjson	/* 46 REFCLK_GPSDJSON */
+	&refclock_gpsdjson,	/* 46 REFCLK_GPSDJSON */
+	&refclock_phc		/* 47 REFCLK_PHC */
 };
 
 const uint8_t num_refclock_conf = sizeof(refclock_conf)/sizeof(struct refclock *);

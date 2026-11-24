@@ -1,0 +1,210 @@
+= PTP Hardware Clock Driver
+include::include-html.ad[]
+
+== Synopsis
+
+["verse",subs="normal"]
+Name: phc
+Reference ID: PHC
+Device: /dev/ptp__u__ or a network interface name (Linux only)
+
+== Description
+
+This driver uses a Linux PTP Hardware Clock (PHC) as a reference
+clock.  A PHC is a clock on a network interface card or other device,
+exposed by the kernel as a character device +/dev/ptp+__u__.  The
+driver has two modes:
+
+* *Offset mode* (default): the PHC is kept synchronized by another
+  program -- _ptp4l_ (LinuxPTP) locks it to a PTP grandmaster, or
+  _ts2phc_ locks it to a GNSS receiver -- and +ntpd+ uses it to
+  discipline the system clock and serve NTP clients.
+* *External PPS mode*: a PPS signal (typically from a GNSS receiver)
+  is wired to a timestamping input pin on the NIC, and the PHC
+  timestamps each pulse in hardware.  This avoids serial-port and
+  interrupt latency entirely, and the PHC itself need not be
+  synchronized to anything.
+
+=== Measuring the PHC
+
+Once per second the driver takes a burst of samples, each a PHC
+timestamp bracketed by two system-clock (+CLOCK_REALTIME+)
+timestamps.  It uses the best method the device supports:
+
+[cols="35%,65%",options="header"]
+|====================================================================
+| Method                    | Notes
+| +PTP_SYS_OFFSET_PRECISE+  | Hardware cross-timestamp (e.g. Intel
+                              ART/PCIe PTM).  One exact pair, no read
+                              latency.
+| +PTP_SYS_OFFSET_EXTENDED+ | The NIC driver brackets each PHC register
+                              read with system timestamps.  Linux 5.0
+                              and later.
+| +PTP_SYS_OFFSET+          | Older generic kernel interface.
+| +clock_gettime()+         | Reads the PHC as a dynamic POSIX clock,
+                              bracketed in user space.  Always works,
+                              least precise.
+|====================================================================
+
+If a method later fails with "not supported" (for example after the
+NIC driver is reloaded), the driver falls back to the next one and logs
+a notice.
+
+A long bracket means the PHC read was delayed (bus contention, an
+interrupt) and its timestamp could lie anywhere inside it.  The driver
+keeps a running estimate of the 20th percentile of bracket widths
+across bursts and averages every sample at or below it (never a band
+narrower than 20 ns above the burst minimum).  Averaging several good
+samples reduces read noise compared with keeping only the single
+shortest bracket, while delayed samples are still discarded.  A burst
+containing a negative bracket straddled a system clock step and is
+dropped entirely.  The reported precision tracks half the averaged
+bracket width.
+
+=== Timescale
+
+PTP uses the TAI timescale, and a PHC disciplined by _ptp4l_ normally
+runs on TAI, currently 37 seconds ahead of UTC.  Set *flag1* in that
+case.  The driver then subtracts the TAI&minus;UTC offset in effect at
+the time of the sample, taken from the link:leap.html[leap second file]
+if one is configured, or else from the kernel's TAI offset
+(+adjtimex()+).  If neither is known, samples are discarded and a
+warning is logged once.  Configuring a +leapfile+ is strongly
+recommended.  *flag1* has no effect in external PPS mode.
+
+=== External PPS mode
+
+Set bit 8 of _mode_ (value 256).  The driver routes the chosen pin to
+an external timestamp channel, enables timestamping of rising (or,
+with bit 9, falling) edges, and once per second reads any queued
+events.  Each pulse's PHC timestamp is mapped to system time by
+interpolating between the last two offset readings, and the system
+clock's offset from the nearest whole second becomes the sample.  The
+refclock is marked as a PPS source, so the usual PPS rules apply:
+samples are discarded until another source has synchronized +ntpd+ and
+numbered the seconds, and that source should normally be marked
++prefer+.
+
+Some hardware timestamps both edges regardless of what is requested;
+any event arriving within half a second of the previous accepted one
+is ignored.  Events from other channels are ignored as well (on Linux
+6.7 and later the driver also asks the kernel to deliver only its own
+channel).
+
+Events are read from the once-per-second timer with a non-blocking
++poll()+ check rather than through ntpd's I/O loop, because the PHC
+device ignores +O_NONBLOCK+ on many kernels.  Since the timestamps are
+taken in hardware, the read latency does not matter.
+
+=== Caveats
+
+In offset mode the driver trusts the PHC.  It cannot tell whether
+_ptp4l_ or _ts2phc_ actually has the device locked to its source, so a
+free-running PHC will be reported as a perfectly good, if wandering,
+reference.  Monitor the disciplining daemon separately, and use this
+driver alongside other sources where possible.
+
+Do not also run _phc2sys_ to steer the system clock from the same PHC;
++ntpd+ is doing that job.  In external PPS mode, do not run _ts2phc_ on
+the same pin.
+
+The device is opened while +ntpd+ still runs as root, so it does not
+need to be accessible to the unprivileged +ntpd+ user.
+
+== Clockstats
+
+If flag4 is set, a clockstats record is written at each poll:
+
+[cols="10%,90%",options="header"]
+|====================================================================
+|Column|Meaning
+|1-3   |Standard clockstats date, time and clock name
+|4     |Readings attempted since the last poll
+|5     |Readings accepted
+|6     |Readings failed or rejected
+|7     |Average number of samples combined per reading
+|8     |Narrowest bracket seen, in nanoseconds (-1 if none)
+|9     |External PPS pulses accepted
+|10    |Measurement method in use, with +"+extpps"+ in PPS mode
+|====================================================================
+
+== Driver Options
+
++unit+ 'number'::
+  The driver unit number, defaulting to 0.  Selects the default device
+  +/dev/ptp+__u__.
++time1+ 'time'::
+  Specifies the time offset calibration factor, in seconds and
+  fraction, with default 0.0.  In external PPS mode use it to
+  compensate cable and receiver delay.
++time2+ 'time'::
+  Not used by this driver.
++stratum+ 'number'::
+  Specifies the driver stratum, in decimal from 0 to 15, with default 0.
++refid+ 'string'::
+  Specifies the driver reference identifier, an ASCII string from one
+  to four characters, with default +PHC+ (+PPS+ in external PPS mode).
++flag1 {0 | 1}+::
+  The PHC runs on TAI; convert to UTC by subtracting the current
+  TAI&minus;UTC offset.
++flag2 {0 | 1}+::
+  Do not use hardware cross-timestamping (+PTP_SYS_OFFSET_PRECISE+)
+  even if the device offers it.
++flag3 {0 | 1}+::
+  Not used by this driver.
++flag4 {0 | 1}+::
+  If set, write clockstats records when the driver is polled.
++subtype+::
+  Not used by this driver.
++mode+ 'number'::
+  A bit field:
++
+[cols="20%,15%,65%",options="header"]
+|====================================================================
+|Bits   |Value     |Meaning
+|0-7    |1-25      |Samples per reading; 0 means the maximum, 25.
+                    Ignored by +PTP_SYS_OFFSET_PRECISE+.
+|8      |256       |External PPS mode
+|9      |512       |Timestamp falling instead of rising edges
+|10     |1024      |Do not configure the pin (fixed-function channel)
+|16-23  |65536 &times; _pin_     |Pin index for external PPS
+|24-31  |16777216 &times; _chan_ |External timestamp channel
+|====================================================================
++path+ 'filename'::
+  The device to use, such as +/dev/ptp1+, or the name of a network
+  interface such as +eth0+, in which case the PHC associated with that
+  interface is used.  Defaults to +/dev/ptp+__u__.
++ppspath+ 'filename'::
+  Not used by this driver.
++baud+ 'number'::
+  Not used by this driver.
+
+== Configuration Examples
+
+The PHC of +eth0+, disciplined by _ptp4l_ (TAI), with a leap file:
+
+------------------------------------------------------------------------------
+leapfile /usr/share/zoneinfo/leap-seconds.list
+refclock phc path eth0 flag1 1 minpoll 4 maxpoll 4 prefer
+------------------------------------------------------------------------------
+
+A GNSS receiver's PPS on pin 1 (SDP1 on an Intel i210), channel 0,
+with the receiver's serial NMEA output numbering the seconds:
+
+------------------------------------------------------------------------------
+refclock nmea unit 0 path /dev/ttyS0 baud 9600 prefer
+refclock phc path enp1s0 mode 65792 minpoll 4 maxpoll 4
+------------------------------------------------------------------------------
+
+(65792 = 256 for external PPS + 65536 &times; 1 for pin 1.)
+
+To see which +/dev/ptp+__u__ belongs to an interface, run
++ethtool -T eth0+ and look for "PTP Hardware Clock".
+
+== Additional Information
+
+link:refclock.html[Reference Clock Drivers]
+
+'''''
+
+include::includes/footer.adoc[]

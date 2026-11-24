@@ -670,6 +670,7 @@ int main(int argc, char **argv) {
         ("ifaddrs.h", ["sys/types.h"]),
         ("linux/if_addr.h", ["sys/socket.h"]),
         ("linux/rtnetlink.h", ["sys/socket.h"]),
+        "linux/ptp_clock.h",
         "linux/serial.h",
         "net/if6.h",
         ("net/route.h", ["sys/types.h", "sys/socket.h", "net/if.h"]),

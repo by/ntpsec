@@ -590,6 +590,36 @@ TEST(leapsec, ls2009limdata) {
 }
 
 // ----------------------------------------------------------------------
+// side-effect-free TAI offset lookup (used by the PHC refclock)
+TEST(leapsec, taiOffset) {
+	leap_result_t  qr;
+	bool           rc;
+
+	// nothing loaded yet
+	TEST_ASSERT_EQUAL(-1, leapsec_tai_offset(lsec2009));
+
+	rc = setup_load_table(leap1);
+	TEST_ASSERT_TRUE(rc);
+
+	TEST_ASSERT_EQUAL(33, leapsec_tai_offset(lsec2009 - 1));
+	TEST_ASSERT_EQUAL(34, leapsec_tai_offset(lsec2009));
+	TEST_ASSERT_EQUAL(34, leapsec_tai_offset(lsec2012 - 1));
+	TEST_ASSERT_EQUAL(35, leapsec_tai_offset(lsec2012));
+	TEST_ASSERT_EQUAL(35, leapsec_tai_offset(lsec2012 + 10*SECSPERDAY));
+	// before the oldest retained entry (table keeps MAX_HIST rows):
+	// the accumulated offset at that point
+	TEST_ASSERT_EQUAL(25, leapsec_tai_offset(0));
+
+	// must not disturb the query state machine
+	rc = leapsec_query(&qr, lsec2009 - SECSPERHR);
+	TEST_ASSERT_FALSE(rc);
+	(void)leapsec_tai_offset(lsec2012 + 1);
+	rc = leapsec_query(&qr, lsec2009 + 1);
+	TEST_ASSERT_TRUE(rc);
+	TEST_ASSERT_EQUAL(34, qr.tai_offs);
+}
+
+// ----------------------------------------------------------------------
 // add dynamic leap second (like from peer/clock)
 TEST(leapsec, addDynamic) {
 	leap_table_t * pt;
@@ -1015,6 +1045,7 @@ TEST_GROUP_RUNNER(leapsec) {
 	RUN_TEST_CASE(leapsec, ls2009onspot);
 	RUN_TEST_CASE(leapsec, ls2009nodata);
 	RUN_TEST_CASE(leapsec, ls2009limdata);
+	RUN_TEST_CASE(leapsec, taiOffset);
 	RUN_TEST_CASE(leapsec, addDynamic);
 	RUN_TEST_CASE(leapsec, addFixed);
 	RUN_TEST_CASE(leapsec, ls2009seqInsElectric);
